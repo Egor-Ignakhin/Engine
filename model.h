@@ -9,6 +9,8 @@ class Model : public QGLWidget
 public:
     Model(QWidget *parent = 0);
     void setRotation(GLfloat* x,GLfloat* y,GLfloat* z);
+    void setPosition(GLfloat* x,GLfloat* y,GLfloat* z);
+    void setScale(GLfloat* x,GLfloat* y,GLfloat* z);
 protected:
     void initializeGL();
     void resizeGL(int width, int height);
@@ -19,9 +21,19 @@ protected:
 private:
     void draw();
     int faceAtPosition(const QPoint &pos);
+
+    GLfloat positionX;
+    GLfloat positionY;
+    GLfloat positionZ;
+
     GLfloat rotationX;
     GLfloat rotationY;
     GLfloat rotationZ;
+
+    GLfloat scaleX;
+    GLfloat scaleY;
+    GLfloat scaleZ;
+
     QColor faceColors[6];
     QPoint lastPos;
 };

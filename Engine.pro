@@ -10,6 +10,7 @@ LIBS += -lopengl32
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    cube.cpp \
     editor.cpp \
     inspector.cpp \
     main.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     transform.cpp
 
 HEADERS += \
+    cube.h \
     editor.h \
     inspector.h \
     model.h \

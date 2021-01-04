@@ -4,6 +4,12 @@
 
 class Editor : public QWidget
 {
+private:
+    QWidget* mWindow;
+public:
+    void init();
+public:
+     QHBoxLayout* mLayout;
 };
 
-#endif // EDITOR_H
+#endif // EDITOR_Hr

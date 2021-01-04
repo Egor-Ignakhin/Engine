@@ -1,16 +1,26 @@
 #include "model.h"
 #include <QColorDialog>
-//#include <GL/glu.h>
-#include <QtOpenGL>
+#include <GL/glu.h>
+//#include <QtOpenGL>
+
 
 
 Model::Model(QWidget *parent)
     : QGLWidget(parent)
 {
     setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+    positionX = 0;
+    positionY = 0;
+    positionZ = 0;
+
     rotationX = 0;
     rotationY = 0;
     rotationZ = 0;
+
+    scaleX = 1;
+    scaleY = 1;
+    scaleZ = 1;
+
     faceColors[0] = Qt::red;
     faceColors[1] = Qt::green;
     faceColors[2] = Qt::blue;
@@ -62,9 +72,11 @@ void Model::draw()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0, 0.0, -10.0);
+     glTranslatef(positionX,positionY,positionZ);
     glRotatef(rotationX, 1.0, 0.0, 0.0);
     glRotatef(rotationY, 0.0, 1.0, 0.0);
     glRotatef(rotationZ, 0.0, 0.0, 1.0);
+    glScalef(scaleX,scaleY,scaleZ);
     for (int i = 0; i < 6; ++i) {
         glLoadName(i);
         glBegin(GL_QUADS);
@@ -124,8 +136,8 @@ int Model::faceAtPosition(const QPoint &pos)
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-   /* gluPickMatrix((GLdouble)pos.x(), // <--
-    (GLdouble) (viewport[3] - pos.y()),
+    /*gluPickMatrix((GLdouble)pos.x(), // <--
+    (GLdouble) (viewport[3] -* pos.y()),
     5.0, 5.0, viewport);*/
     GLfloat x = (GLfloat)width() / height();
     glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
@@ -136,6 +148,17 @@ int Model::faceAtPosition(const QPoint &pos)
         return -1;
     return buffer[3];
 }
+
+void Model::setPosition(GLfloat *x, GLfloat *y, GLfloat *z){
+    if(x != nullptr)
+        positionX = *x;
+    if(y != nullptr)
+        positionY = *y;
+    if(z != nullptr)
+        positionZ = *z;
+    updateGL();
+}
+
 void Model::setRotation(GLfloat* x,GLfloat* y,GLfloat* z){
     if(x != nullptr)
         rotationX = *x;
@@ -146,3 +169,12 @@ void Model::setRotation(GLfloat* x,GLfloat* y,GLfloat* z){
     updateGL();
 }
 
+void Model::setScale(GLfloat *x, GLfloat *y, GLfloat *z){
+    if(x != nullptr)
+       scaleX = *x;
+    if(y != nullptr)
+        scaleY = *y;
+    if(z != nullptr)
+        scaleZ = *z;
+    updateGL();
+}

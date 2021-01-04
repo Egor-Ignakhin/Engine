@@ -13,13 +13,22 @@ public:
     Model* curModel;
 private:
     QWidget* mTransformLabel;
-    QHBoxLayout* mTransformLayout;
+    QVBoxLayout* mTransformLayout;
     Transform* mTransform;
-    QLineEdit* mTransformLblX;
-    QLineEdit* mTransformLblY;
-    QLineEdit* mTransformLblZ;
+
+    QLineEdit* mTransformPosLblX;
+    QLineEdit* mTransformPosLblY;
+    QLineEdit* mTransformPosLblZ;
+    QLineEdit* mTransformRotLblX;
+    QLineEdit* mTransformRotLblY;
+    QLineEdit* mTransformRotLblZ;
+    QLineEdit* mTransformScaleLblX;
+    QLineEdit* mTransformScaleLblY;
+    QLineEdit* mTransformScaleLblZ;
 private slots:
-   void slotChangeTransform(const QString);
+   void slotChangeRotation(const QString);
+   void slotChangePosition(const QString);
+   void slotChangeScale(const QString);
 };
 
 #endif // INSPECTOR_H
