@@ -9,9 +9,10 @@ class Inspector : public Editor
     Q_OBJECT
 public:
     Inspector();
-    ~Inspector();
-    Model* curModel;
+    ~Inspector();   
+    void setCurModel(Model*);
 private:
+    Model* curModel;
     QWidget* mTransformLabel;
     QVBoxLayout* mTransformLayout;
     Transform* mTransform;
@@ -25,6 +26,8 @@ private:
     QLineEdit* mTransformScaleLblX;
     QLineEdit* mTransformScaleLblY;
     QLineEdit* mTransformScaleLblZ;
+    QLabel* curModelLbl;
+
 private slots:
    void slotChangeRotation(const QString);
    void slotChangePosition(const QString);

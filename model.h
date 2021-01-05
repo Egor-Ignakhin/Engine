@@ -2,25 +2,23 @@
 #define MODEL_H
 
 #include <QGLWidget>
-#include <QMouseEvent>
-class Model : public QGLWidget
+#include "glwindow.h"
+
+class Model
 {
-    Q_OBJECT
 public:
-    Model(QWidget *parent = 0);
-    void setRotation(GLfloat* x,GLfloat* y,GLfloat* z);
-    void setPosition(GLfloat* x,GLfloat* y,GLfloat* z);
-    void setScale(GLfloat* x,GLfloat* y,GLfloat* z);
+    Model(GLWindow* parent, QString name);
+    QString name();
+    void setRotation(GLfloat x,GLfloat y,GLfloat z);
+    void setPosition(GLfloat x,GLfloat y,GLfloat z);
+    void setScale(GLfloat x,GLfloat y,GLfloat z);
+    virtual void draw() = 0;
+    QColor faceColors[6];
+
+    std::vector<GLfloat> getRotation();
+
 protected:
-    void initializeGL();
-    void resizeGL(int width, int height);
-    void paintGL();
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
-private:
-    void draw();
-    int faceAtPosition(const QPoint &pos);
+    QString mName;
 
     GLfloat positionX;
     GLfloat positionY;
@@ -34,7 +32,6 @@ private:
     GLfloat scaleY;
     GLfloat scaleZ;
 
-    QColor faceColors[6];
-    QPoint lastPos;
+    GLWindow* pWindow;
 };
 #endif // MODEL_H

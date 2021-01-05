@@ -1,4 +1,5 @@
 #include "inspector.h"
+#define COORD_LIMIT std::numeric_limits<float>::max() //using for coords model
 
 Inspector::Inspector(){
     mTransform = new Transform;
@@ -44,6 +45,10 @@ Inspector::Inspector(){
     scaleLayout->addWidget(mTransformScaleLblX);
     scaleLayout->addWidget(mTransformScaleLblY);
     scaleLayout->addWidget(mTransformScaleLblZ);
+
+    curModelLbl = new QLabel("0",this);
+    mTransformLayout->addWidget(curModelLbl);
+
     parentAllScalelbls->setLayout(scaleLayout);
 
     mTransformLabel->setLayout(mTransformLayout);
@@ -81,8 +86,8 @@ void Inspector::slotChangePosition(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    GLfloat* r[] {nullptr, nullptr, nullptr};//position
-    r[lineSender == mTransformPosLblX? 0 : lineSender == mTransformPosLblY? 1 : 2 ] = &value;
+    GLfloat r[] {COORD_LIMIT, COORD_LIMIT, COORD_LIMIT};//position
+    r[lineSender == mTransformPosLblX? 0 : lineSender == mTransformPosLblY? 1 : 2 ] = value;
 
     curModel->setPosition(r[0], r[1], r[2]);
 
@@ -103,8 +108,8 @@ void Inspector::slotChangeRotation(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    GLfloat* r[] {nullptr, nullptr, nullptr};//rotation
-    r[lineSender == mTransformRotLblX? 0 : lineSender == mTransformRotLblY? 1 : 2 ] = &value;
+    GLfloat r[] {COORD_LIMIT, COORD_LIMIT, COORD_LIMIT};//rotation
+    r[lineSender == mTransformRotLblX? 0 : lineSender == mTransformRotLblY? 1 : 2 ] = value;
 
     curModel->setRotation(r[0], r[1], r[2]);
 
@@ -123,8 +128,8 @@ void Inspector::slotChangeScale(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    GLfloat* r[] {nullptr, nullptr, nullptr};//rotation
-    r[lineSender == mTransformScaleLblX? 0 : lineSender == mTransformScaleLblY? 1 : 2 ] = &value;
+    GLfloat r[] {COORD_LIMIT, COORD_LIMIT, COORD_LIMIT};//rotation
+    r[lineSender == mTransformScaleLblX? 0 : lineSender == mTransformScaleLblY? 1 : 2 ] = value;
 
     curModel->setScale(r[0], r[1], r[2]);
 
@@ -138,4 +143,8 @@ void Inspector::slotChangeScale(const QString text){
     else{
         lineSender->setText(QString('0'));
     }
+}
+void Inspector::setCurModel(Model* model){
+    curModel = model;
+    curModelLbl->setText( "Current object : " + curModel->name());
 }

@@ -1,14 +1,12 @@
 #include "model.h"
 #include <QColorDialog>
 #include <GL/glu.h>
-//#include <QtOpenGL>
+#define COORD_LIMIT std::numeric_limits<float>::max() //using for coords model
 
-
-
-Model::Model(QWidget *parent)
-    : QGLWidget(parent)
-{
-    setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+Model::Model(GLWindow* parent, QString name)
+{   
+    pWindow = parent;
+    mName = name.isEmpty()? "New object" : name;
     positionX = 0;
     positionY = 0;
     positionZ = 0;
@@ -20,161 +18,43 @@ Model::Model(QWidget *parent)
     scaleX = 1;
     scaleY = 1;
     scaleZ = 1;
-
-    faceColors[0] = Qt::red;
-    faceColors[1] = Qt::green;
-    faceColors[2] = Qt::blue;
-    faceColors[3] = Qt::cyan;
-    faceColors[4] = Qt::yellow;
-    faceColors[5] = Qt::magenta;
+}
+QString Model::name(){
+    return mName;
 }
 
-void Model::initializeGL()
-{
-    qglClearColor(Qt::black);
-    glShadeModel(GL_FLAT);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+void Model::setPosition(GLfloat x, GLfloat y, GLfloat z){
+    if(x != COORD_LIMIT)
+        positionX = x;
+    if(y != COORD_LIMIT)
+        positionY = y;
+    if(z != COORD_LIMIT)
+        positionZ = z;
+  pWindow -> updateGL();
 }
 
-void Model::resizeGL(int width, int height)
-{
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    GLfloat x = (GLfloat)width / height;
-    glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
-    glMatrixMode(GL_MODELVIEW);
+void Model::setRotation(GLfloat x,GLfloat y,GLfloat z){
+    if(x != COORD_LIMIT)
+        rotationX = x;
+    if(y != COORD_LIMIT)
+        rotationY = y;
+    if(z != COORD_LIMIT)
+        rotationZ = z;
+    pWindow->updateGL();
 }
 
-void Model::paintGL()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    draw();
+void Model::setScale(GLfloat x, GLfloat y, GLfloat z){
+    if(x != COORD_LIMIT)
+       scaleX = x;
+    if(y != COORD_LIMIT)
+        scaleY = y;
+    if(z != COORD_LIMIT)
+        scaleZ = z;
+    pWindow->updateGL();
 }
+std::vector<GLfloat> Model::getRotation(){
 
-void Model::draw()
-{
-    static const GLfloat coords[6] [4] [3] = {
-        { { +1.0, -1.0, +1.0 }, { +1.0, -1.0, -1.0 },
-        { +1.0, +1.0, -1.0 }, { +1.0, +1.0, +1.0 } },
-        { { -1.0, -1.0, -1.0 }, { -1.0, -1.0, +1.0 },
-        { -1.0, +1.0, +1.0 }, { -1.0, +1.0, -1.0 } },
-        { { +1.0, -1.0, -1.0 }, { -1.0, -1.0, -1.0 },
-        { -1.0, +1.0, -1.0 }, { +1.0, +1.0, -1.0 } },
-        { { -1.0, -1.0, +1.0 }, { +1.0, -1.0, +1.0 },
-        { +1.0, +1.0, +1.0 }, { -1.0, +1.0, +1.0 } },
-        { { -1.0, -1.0, -1.0 }, { +1.0, -1.0, -1.0 },
-        { +1.0, -1.0, +1.0 }, { -1.0, -1.0, +1.0 } },
-        { { -1.0, +1.0, +1.0 }, { +1.0, +1.0, +1.0 },
-        { +1.0, +1.0, -1.0 }, { -1.0, +1.0, -1.0 } }
-    };
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.0, 0.0, -10.0);
-     glTranslatef(positionX,positionY,positionZ);
-    glRotatef(rotationX, 1.0, 0.0, 0.0);
-    glRotatef(rotationY, 0.0, 1.0, 0.0);
-    glRotatef(rotationZ, 0.0, 0.0, 1.0);
-    glScalef(scaleX,scaleY,scaleZ);
-    for (int i = 0; i < 6; ++i) {
-        glLoadName(i);
-        glBegin(GL_QUADS);
-        qglColor(faceColors[i]);
-        for (int j = 0; j < 4; ++j) {
-            glVertex3f(coords[i] [j] [0], coords[i] [j] [1],
-            coords[i] [j] [2]);
-        }
-        glEnd();
-    }
-}
+    std::vector<GLfloat> rot{rotationX, rotationY, rotationZ};
 
-void Model::mousePressEvent(QMouseEvent *event)
-{
-    lastPos = event->pos();
-}
-
-void Model::mouseMoveEvent(QMouseEvent *event)
-{
-    GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
-    GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
-    if (event->buttons() & Qt::LeftButton) {
-        rotationX += 180 * dy;
-        rotationY += 180 * dx;
-        updateGL();
-    } else if (event->buttons() & Qt::RightButton) {
-        rotationX += 180 * dy;
-        rotationZ += 180 * dx;
-        updateGL();
-    }
-    lastPos = event->pos();
-}
-
-void Model::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    int face = faceAtPosition(event->pos());
-    if (face != -1) {
-        QColor color = QColorDialog::getColor(faceColors[face],
-        this);
-        if (color.isValid()) {
-            faceColors[face] = color;
-            updateGL();
-        }
-    }
-}
-
-int Model::faceAtPosition(const QPoint &pos)
-{
-    const int MaxSize = 512;
-    GLuint buffer[MaxSize];
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    glSelectBuffer(MaxSize, buffer);
-    glRenderMode(GL_SELECT);
-    glInitNames();
-    glPushName(0);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    /*gluPickMatrix((GLdouble)pos.x(), // <--
-    (GLdouble) (viewport[3] -* pos.y()),
-    5.0, 5.0, viewport);*/
-    GLfloat x = (GLfloat)width() / height();
-    glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
-    draw();
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    if (!glRenderMode(GL_RENDER))
-        return -1;
-    return buffer[3];
-}
-
-void Model::setPosition(GLfloat *x, GLfloat *y, GLfloat *z){
-    if(x != nullptr)
-        positionX = *x;
-    if(y != nullptr)
-        positionY = *y;
-    if(z != nullptr)
-        positionZ = *z;
-    updateGL();
-}
-
-void Model::setRotation(GLfloat* x,GLfloat* y,GLfloat* z){
-    if(x != nullptr)
-        rotationX = *x;
-    if(y != nullptr)
-        rotationY = *y;
-    if(z != nullptr)
-        rotationZ = *z;
-    updateGL();
-}
-
-void Model::setScale(GLfloat *x, GLfloat *y, GLfloat *z){
-    if(x != nullptr)
-       scaleX = *x;
-    if(y != nullptr)
-        scaleY = *y;
-    if(z != nullptr)
-        scaleZ = *z;
-    updateGL();
+    return rot;
 }
