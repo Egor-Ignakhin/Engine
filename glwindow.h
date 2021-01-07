@@ -14,7 +14,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
-public:
+public:    
     Model* curmodel;
     GLWindow(QWidget* parent = 0);
     QList<Model*> models;

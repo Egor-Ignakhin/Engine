@@ -2,6 +2,7 @@
 #include <QColorDialog>
 #include <QDebug>
 #include "model.h"
+#include <GL/glu.h>
 
 GLWindow::GLWindow(QWidget* parent) : QGLWidget(parent)
 {
@@ -32,13 +33,23 @@ void GLWindow::paintGL()
         models[i]->draw();
     }
 }
-void GLWindow::mousePressEvent(QMouseEvent *event)
-{
+
+void GLWindow::mousePressEvent(QMouseEvent *event){
     lastPos = event->pos();
 }
 
 void GLWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    double aspect = width() / height();
+    glViewport(0, 0, width(), height());
+    glClearColor(0, 0, 0, 0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    static int i;
+    glOrtho(-150, 150, -112, 112, -150, 150);
+    gluPerspective(60.0, aspect, 1.0, 200.0);
+    glMatrixMode(GL_MODELVIEW);
+
     GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
     GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
     std::vector<GLfloat> curModelRot = curmodel->getRotation();
@@ -78,9 +89,10 @@ int GLWindow::faceAtPosition(const QPoint &pos)
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    /*gluPickMatrix((GLdouble)pos.x(), // <--
-    (GLdouble) (viewport[3] -* pos.y()),
-    5.0, 5.0, viewport);*/
+    gluPickMatrix((GLdouble)pos.x(),
+    (GLdouble) (viewport[3] - pos.y()),
+    5.0, 5.0, viewport);
+
     GLfloat x = (GLfloat)width() / height();
     glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
     for(int i = 0; i < models.size();i++){
@@ -92,3 +104,4 @@ int GLWindow::faceAtPosition(const QPoint &pos)
         return -1;
     return buffer[3];
 }
+

@@ -3,7 +3,7 @@ QT       += core gui opengl
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
-LIBS += -lopengl32
+LIBS += -lopengl32 -lglu32
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -17,7 +17,8 @@ SOURCES += \
     inspector.cpp \
     main.cpp \
     model.cpp \
-    transform.cpp
+    transform.cpp \
+    vector3.cpp
 
 HEADERS += \
     coreengine.h \
@@ -26,7 +27,8 @@ HEADERS += \
     glwindow.h \
     inspector.h \
     model.h \
-    transform.h
+    transform.h \
+    vector3.h
 
 FORMS +=
 
