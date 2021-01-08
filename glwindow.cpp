@@ -45,9 +45,8 @@ void GLWindow::mouseMoveEvent(QMouseEvent *event)
     glClearColor(0, 0, 0, 0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    static int i;
-    glOrtho(-150, 150, -112, 112, -150, 150);
-    gluPerspective(60.0, aspect, 1.0, 200.0);
+    glOrtho(-150, 150, -112, 112, -150, 150);//glOrtho(hor+, hor-, up+ , up-, nearPlane, farPlane);
+    gluPerspective(60.0, aspect, 1.0, 200.0);//fov,aspect
     glMatrixMode(GL_MODELVIEW);
 
     GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
@@ -104,4 +103,11 @@ int GLWindow::faceAtPosition(const QPoint &pos)
         return -1;
     return buffer[3];
 }
+void GLWindow::updeateGL(){
 
+}
+
+void GLWindow::update(){
+  qDebug() <<"call";
+  updateGL();
+}

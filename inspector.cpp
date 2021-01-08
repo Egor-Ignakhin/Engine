@@ -1,4 +1,5 @@
 #include "inspector.h"
+#include "glwindow.h"
 #define COORD_LIMIT std::numeric_limits<float>::max() //using for coords model
 
 Inspector::Inspector(){
@@ -47,7 +48,9 @@ Inspector::Inspector(){
     scaleLayout->addWidget(mTransformScaleLblZ);
 
     curModelLbl = new QLabel("0",this);
+    camXRotate = new QLineEdit(this);
     mTransformLayout->addWidget(curModelLbl);
+    mTransformLayout->addWidget(camXRotate);
 
     parentAllScalelbls->setLayout(scaleLayout);
 
@@ -76,6 +79,8 @@ Inspector::Inspector(){
             SLOT(slotChangeScale(const QString)));
     connect(mTransformScaleLblZ,SIGNAL(textChanged(const QString)),
             SLOT(slotChangeScale(const QString)));
+
+    connect(camXRotate,SIGNAL(textChanged(const QString)),SLOT(slotChangeCamRot(const QString)));
 }
 
 Inspector::~Inspector(){
@@ -147,4 +152,8 @@ void Inspector::slotChangeScale(const QString text){
 void Inspector::setCurModel(Model* model){
     curModel = model;
     curModelLbl->setText( "Current object : " + curModel->name());
+}
+void Inspector::slotChangeCamRot(const QString txt){
+     float value = (QStringRef(&txt, 0, txt.size())).toFloat();
+    mWindow->xCamRot = value;
 }

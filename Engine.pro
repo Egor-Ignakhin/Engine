@@ -10,6 +10,7 @@ LIBS += -lopengl32 -lglu32
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    component.cpp \
     coreengine.cpp \
     cube.cpp \
     editor.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     vector3.cpp
 
 HEADERS += \
+    component.h \
     coreengine.h \
     cube.h \
     editor.h \

@@ -30,7 +30,6 @@ void Model::setPosition(GLfloat x, GLfloat y, GLfloat z){
         positionY = y;
     if(z != COORD_LIMIT)
         positionZ = z;
-  pWindow -> updateGL();
 }
 
 void Model::setRotation(GLfloat x,GLfloat y,GLfloat z){
@@ -40,7 +39,6 @@ void Model::setRotation(GLfloat x,GLfloat y,GLfloat z){
         rotationY = y;
     if(z != COORD_LIMIT)
         rotationZ = z;
-    pWindow->updateGL();
 }
 
 void Model::setScale(GLfloat x, GLfloat y, GLfloat z){
@@ -50,7 +48,6 @@ void Model::setScale(GLfloat x, GLfloat y, GLfloat z){
         scaleY = y;
     if(z != COORD_LIMIT)
         scaleZ = z;
-    pWindow->updateGL();
 }
 std::vector<GLfloat> Model::getRotation(){
 
