@@ -1,6 +1,6 @@
 #include "inspector.h"
 #include "glwindow.h"
-#define COORD_LIMIT std::numeric_limits<float>::max() //using for coords model
+#include "vector3.h"
 
 Inspector::Inspector(){
     mTransform = new Transform;
@@ -57,27 +57,27 @@ Inspector::Inspector(){
     mTransformLabel->setLayout(mTransformLayout);
 
     //connect position fields
-    connect(mTransformPosLblX,SIGNAL(textChanged(const QString)),
+    connect(mTransformPosLblX,SIGNAL(textEdited(const QString)),
             SLOT(slotChangePosition(const QString)));
-    connect(mTransformPosLblY,SIGNAL(textChanged(const QString)),
+    connect(mTransformPosLblY,SIGNAL(textEdited(const QString)),
             SLOT(slotChangePosition(const QString)));
-    connect(mTransformPosLblZ,SIGNAL(textChanged(const QString)),
+    connect(mTransformPosLblZ,SIGNAL(textEdited(const QString)),
             SLOT(slotChangePosition(const QString)));
 
     //connect rotation fields
-    connect(mTransformRotLblX,SIGNAL(textChanged(const QString)),
+    connect(mTransformRotLblX,SIGNAL(textEdited(const QString)),
             SLOT(slotChangeRotation(const QString)));
-    connect(mTransformRotLblY,SIGNAL(textChanged(const QString)),
+    connect(mTransformRotLblY,SIGNAL(textEdited(const QString)),
             SLOT(slotChangeRotation(const QString)));
-    connect(mTransformRotLblZ,SIGNAL(textChanged(const QString)),
-            SLOT(slotChangeRotation(const QString)));
+    connect(mTransformRotLblZ,SIGNAL(textEdited(const QString)),
+            SLOT(slotChangeRotation(const QString)));  
 
     //connect scale fields
-    connect(mTransformScaleLblX,SIGNAL(textChanged(const QString)),
+    connect(mTransformScaleLblX,SIGNAL(textEdited(const QString)),
             SLOT(slotChangeScale(const QString)));
-    connect(mTransformScaleLblY,SIGNAL(textChanged(const QString)),
+    connect(mTransformScaleLblY,SIGNAL(textEdited(const QString)),
             SLOT(slotChangeScale(const QString)));
-    connect(mTransformScaleLblZ,SIGNAL(textChanged(const QString)),
+    connect(mTransformScaleLblZ,SIGNAL(textEdited(const QString)),
             SLOT(slotChangeScale(const QString)));
 
     connect(camXRotate,SIGNAL(textChanged(const QString)),SLOT(slotChangeCamRot(const QString)));
@@ -91,10 +91,18 @@ void Inspector::slotChangePosition(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    GLfloat r[] {COORD_LIMIT, COORD_LIMIT, COORD_LIMIT};//position
-    r[lineSender == mTransformPosLblX? 0 : lineSender == mTransformPosLblY? 1 : 2 ] = value;
+    Vector3 p = curModel->getPosition();//position
 
-    curModel->setPosition(r[0], r[1], r[2]);
+    if(lineSender == mTransformPosLblX){
+        p.x = value;
+    }
+    else if(lineSender == mTransformPosLblY){
+        p.y = value;
+    }
+    else{
+        p.z = value;
+    }
+     curModel->setPosition(p);
 
     //if text is empty then set '0'
     if(!text.isEmpty()){
@@ -113,10 +121,20 @@ void Inspector::slotChangeRotation(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    GLfloat r[] {COORD_LIMIT, COORD_LIMIT, COORD_LIMIT};//rotation
-    r[lineSender == mTransformRotLblX? 0 : lineSender == mTransformRotLblY? 1 : 2 ] = value;
+    Vector3 r  = curModel->getRotation();//rotation
 
-    curModel->setRotation(r[0], r[1], r[2]);
+    if(lineSender == mTransformRotLblX){
+        r.x = value;
+    }
+    else if(lineSender == mTransformRotLblY){
+        r.y = value;
+    }
+    else{
+        r.z = value;
+    }
+
+    curModel->setRotation(r);
+
 
     //if text is empty then set '0'
     if(!text.isEmpty()){
@@ -133,10 +151,18 @@ void Inspector::slotChangeScale(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    GLfloat r[] {COORD_LIMIT, COORD_LIMIT, COORD_LIMIT};//rotation
-    r[lineSender == mTransformScaleLblX? 0 : lineSender == mTransformScaleLblY? 1 : 2 ] = value;
+    Vector3 s = curModel->getScale();//scale
+    if(lineSender == mTransformScaleLblX){
+        s.x = value;
+    }
+    else if(lineSender == mTransformScaleLblY){
+        s.y = value;
+    }
+    else{
+        s.z = value;
+    }
 
-    curModel->setScale(r[0], r[1], r[2]);
+    curModel->setScale(s);
 
     //if text is empty then set '0'
     if(!text.isEmpty()){
@@ -152,8 +178,21 @@ void Inspector::slotChangeScale(const QString text){
 void Inspector::setCurModel(Model* model){
     curModel = model;
     curModelLbl->setText( "Current object : " + curModel->name());
+
+    connect(curModel,SIGNAL(signalChangeRotation(Vector3)),
+            SLOT(slotSetRotation(Vector3)));
+    connect(curModel,SIGNAL(signalChangeRotation(Vector3)),
+            SLOT(slotSetRotation(Vector3)));
+    connect(curModel,SIGNAL(signalChangeRotation(Vector3)),
+            SLOT(slotSetRotation(Vector3)));
 }
 void Inspector::slotChangeCamRot(const QString txt){
-     float value = (QStringRef(&txt, 0, txt.size())).toFloat();
+    float value = (QStringRef(&txt, 0, txt.size())).toFloat();
     mWindow->xCamRot = value;
+    curModel->additionalTurn.y = value;
+}
+void Inspector::slotSetRotation(Vector3 vec){
+     mTransformRotLblX->setText(QString::number(vec.x));
+     mTransformRotLblY->setText(QString::number(vec.y));
+     mTransformRotLblZ->setText(QString::number(vec.z));
 }

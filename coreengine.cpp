@@ -11,13 +11,23 @@ CoreEngine::CoreEngine()
 
 
     GLWindow* glw = new GLWindow;
-    Cube* cube1 = new Cube(glw, "Cube1"),
-            *cube2 = new Cube(glw,"Cube2");
+    Cube* column1 = new Cube(glw, "column1"),
+            *column2 = new Cube(glw,"column2"),
+            *floor = new Cube(glw,"floor");
 
-    inspector->setCurModel(cube1);
-    glw->curmodel = cube1;
-    glw->models.append(cube1);
-    glw->models.append(cube2);
+    inspector->setCurModel(column1);
+    floor->setPosition(Vector3(0, -100, 0));
+    floor->setRotation(Vector3(5, 0, 0));
+    floor->setScale(Vector3(50, 1, 1000));
+
+    column1->setPosition(Vector3(-35, -1, 0));
+    column1->setRotation(Vector3(0, 0, 0));
+    column1->setScale(Vector3(10, 100, 10));
+
+    column2->setPosition(Vector3(35, -1, 0));
+    column2->setRotation(Vector3(0, 0, 0));
+    column2->setScale(Vector3(10, 100, 10));
+    glw->curmodel = column1;
     editor->mLayout->addWidget(glw);
     editor->mLayout->addWidget(inspector);
     inspector->mWindow = glw;

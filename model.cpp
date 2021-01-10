@@ -1,57 +1,36 @@
 #include "model.h"
 #include <QColorDialog>
 #include <GL/glu.h>
-#define COORD_LIMIT std::numeric_limits<float>::max() //using for coords model
 
-Model::Model(GLWindow* parent, QString name)
-{   
+Model::Model(GLWindow* parent, QString name) :
+    position(0,0,0), rotation(0,0,0), scale(1,1,1), additionalTurn(0,0,0)
+{
     pWindow = parent;
+    pWindow->models.append(this);
     mName = name.isEmpty()? "New object" : name;
-    positionX = 0;
-    positionY = 0;
-    positionZ = 0;
-
-    rotationX = 0;
-    rotationY = 0;
-    rotationZ = 0;
-
-    scaleX = 1;
-    scaleY = 1;
-    scaleZ = 1;
 }
 QString Model::name(){
     return mName;
 }
 
-void Model::setPosition(GLfloat x, GLfloat y, GLfloat z){
-    if(x != COORD_LIMIT)
-        positionX = x;
-    if(y != COORD_LIMIT)
-        positionY = y;
-    if(z != COORD_LIMIT)
-        positionZ = z;
+void Model::setPosition(Vector3 vec){
+    position = vec;
 }
 
-void Model::setRotation(GLfloat x,GLfloat y,GLfloat z){
-    if(x != COORD_LIMIT)
-        rotationX = x;
-    if(y != COORD_LIMIT)
-        rotationY = y;
-    if(z != COORD_LIMIT)
-        rotationZ = z;
+void Model::setRotation(Vector3 vec){
+    rotation = vec;
+    emit signalChangeRotation(rotation);
 }
 
-void Model::setScale(GLfloat x, GLfloat y, GLfloat z){
-    if(x != COORD_LIMIT)
-       scaleX = x;
-    if(y != COORD_LIMIT)
-        scaleY = y;
-    if(z != COORD_LIMIT)
-        scaleZ = z;
+void Model::setScale(Vector3 vec){
+    scale = vec;
 }
-std::vector<GLfloat> Model::getRotation(){
-
-    std::vector<GLfloat> rot{rotationX, rotationY, rotationZ};
-
-    return rot;
+Vector3 Model::getPosition(){
+    return position;
+}
+Vector3 Model::getRotation(){
+    return rotation;
+}
+Vector3 Model::getScale(){
+    return scale;
 }

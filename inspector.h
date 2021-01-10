@@ -37,6 +37,7 @@ private slots:
    void slotChangePosition(const QString);
    void slotChangeScale(const QString);
    void slotChangeCamRot(const QString);
+   void slotSetRotation(Vector3 vec);
 };
 
 #endif // INSPECTOR_H

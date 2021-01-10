@@ -1,10 +1,13 @@
 #include "vector3.h"
-#include "glu.h"
 
-Vector3::Vector3(float wx, float wy,float wz)
+Vector3::Vector3(float x, float y,float z)
 {
-    x = wx;
-    y = wy;
-    z = wz;
+    this->x = x;
+    this->y = y;
+    this->z = z;
 }
-
+void Vector3::set(float x, float y, float z){
+    this->x = x;
+    this->y = y;
+    this->z = z;
+}

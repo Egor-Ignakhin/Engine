@@ -12,7 +12,6 @@ protected:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
-    void updeateGL();
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
@@ -23,8 +22,13 @@ public:
     GLfloat xCamRot;
     void update();
 private:
-     int faceAtPosition(const QPoint &pos);
+    void rotateCamera(bool right);
+    int faceAtPosition(const QPoint &pos);
     QPoint lastPos;
+    int globPosX;
+    int globPosY;
+    int globWidth;
+    int globHeight;
 };
 
 #endif // GLWINDOW_H

@@ -3,7 +3,7 @@
 
 #include "model.h"
 
-class Cube:public Model
+class Cube : public Model
 {
 public:
     Cube(GLWindow* parent, QString name);

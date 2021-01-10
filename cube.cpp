@@ -26,12 +26,12 @@ void Cube::draw(){
     };
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glTranslatef(0.0, 0.0, -10.0);
-    glTranslatef(positionX,positionY,positionZ);
-    glRotatef(rotationX, 1.0, 0.0, 0.0);
-    glRotatef(rotationY, 0.0, 1.0, 0.0);
-    glRotatef(rotationZ, 0.0, 0.0, 1.0);
-    glScalef(scaleX,scaleY,scaleZ);
+    glRotatef(rotation.x, 1.0 + additionalTurn.x, 0.0, 0.0 );
+    glRotatef(rotation.y, 0.0, 1.0 + additionalTurn.y, 0.0);
+    glRotatef(rotation.z, 0.0,  0.0, 1.0 + additionalTurn.z);
+    glTranslatef(position.x,position.y,position.z);
+    glScalef(scale.x, scale.y, scale.z);
+
     for (int i = 0; i < 6; ++i) {
         glLoadName(i);
         glBegin(GL_QUADS);

@@ -3,6 +3,8 @@
 #include <QDebug>
 #include "model.h"
 #include <GL/glu.h>
+#include "vector3.h"
+#include <QApplication>
 
 GLWindow::GLWindow(QWidget* parent) : QGLWidget(parent)
 {
@@ -24,11 +26,26 @@ void GLWindow::resizeGL(int width, int height)
     GLfloat x = (GLfloat)width / height;
     glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
     glMatrixMode(GL_MODELVIEW);
+
+    globPosX = mapToGlobal(pos()).x();
+    globPosY = mapToGlobal(pos()).y();
+    globWidth = mapToGlobal(QPoint(width, height)).x();
+    globHeight = mapToGlobal(QPoint(width, height)).y();
 }
 
 void GLWindow::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    double aspect = width() / height();
+    glViewport(0, 0, width(), height());
+    glClearColor(0, 0, 0, 0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-150, 150, -112, 112, -150, 1500);//glOrtho(hor+, hor-, up+ , up-, nearPlane, farPlane);
+    gluPerspective(60.0, aspect, 1.0, 2000.0);//fov,aspect
+    glMatrixMode(GL_MODELVIEW);
+
     for(int i = 0; i < models.size();i++){
         models[i]->draw();
     }
@@ -40,38 +57,49 @@ void GLWindow::mousePressEvent(QMouseEvent *event){
 
 void GLWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    double aspect = width() / height();
-    glViewport(0, 0, width(), height());
-    glClearColor(0, 0, 0, 0);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-150, 150, -112, 112, -150, 150);//glOrtho(hor+, hor-, up+ , up-, nearPlane, farPlane);
-    gluPerspective(60.0, aspect, 1.0, 200.0);//fov,aspect
-    glMatrixMode(GL_MODELVIEW);
+    /* GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
+        GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
+        Vector3 newRot = curmodel->getRotation();
+        if (event->buttons() & Qt::LeftButton) {
+            newRot.x += 180 * dy;
+            newRot.y += 180 * dx;
+        } else if (event->buttons() & Qt::RightButton) {
+            newRot.x += 180 * dy;
+            newRot.z += 180 * dx;
+        }
+        curmodel->setRotation(newRot);*/
 
-    GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
-    GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
-    std::vector<GLfloat> curModelRot = curmodel->getRotation();
-    if (event->buttons() & Qt::LeftButton) {
-        curmodel->setRotation(curModelRot[0] + 180 * dy,curModelRot[1] + 180 * dx, curModelRot[2]);
-        updateGL();
-    } else if (event->buttons() & Qt::RightButton) {
-        curmodel->setRotation(curModelRot[0] + 180 * dy,curModelRot[1] , curModelRot[2] + 180 * dx);
-        updateGL();
+    static int count;
+    int posW = cursor().pos().x();
+    int posH = cursor().pos().y();
+
+    if(posW > globPosX && posW < globWidth &&// intersect cursor
+            posH > globPosY && posH < globHeight){
+
+
+        int difference = posW - (globWidth + globPosX)/2;
+        if(difference > 0){
+
+            qDebug()<<"> 0"<<count++;
+            rotateCamera(true);
+        }
+        else if (difference < 0){
+            rotateCamera(false);
+            qDebug()<<"< 0"<<count++;
+        }
+
     }
     lastPos = event->pos();
 }
 
 void GLWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
-
     int face = faceAtPosition(event->pos());
     if (face != -1) {
         QColor color = QColorDialog::getColor( curmodel->faceColors[face],
                                                this);
         if (color.isValid()) {
-            curmodel->faceColors[face] = color;
-            updateGL();
+            curmodel->faceColors[face] = color;            
         }
     }
 }
@@ -103,11 +131,13 @@ int GLWindow::faceAtPosition(const QPoint &pos)
         return -1;
     return buffer[3];
 }
-void GLWindow::updeateGL(){
-
-}
 
 void GLWindow::update(){
-  qDebug() <<"call";
   updateGL();
+}
+void GLWindow::rotateCamera(bool right){
+for(int i =0; i< models.size();i++){
+    Vector3 mRot = models[i]->getRotation();
+    models[i]->setRotation(Vector3(mRot.x,mRot.y + (right ? 1 : -1),mRot.z));
+}
 }
