@@ -15,72 +15,79 @@ Inspector::Inspector(){
     QWidget* parentAllRotlbls = new QWidget(this);
     QWidget* parentAllScalelbls = new QWidget(this);
 
-    mTransformPosLblX = new QLineEdit("0", parentAllPoslbls);
-    mTransformPosLblY = new QLineEdit("0", parentAllPoslbls);
-    mTransformPosLblZ = new QLineEdit("0", parentAllPoslbls);
 
-    mTransformRotLblX = new QLineEdit("0", parentAllRotlbls);
-    mTransformRotLblY = new QLineEdit("0", parentAllRotlbls);
-    mTransformRotLblZ = new QLineEdit("0", parentAllRotlbls);
+    mTrLbls[0] = new QLineEdit("0", parentAllPoslbls);
+    mTrLbls[1] = new QLineEdit("0", parentAllPoslbls);
+    mTrLbls[2] = new QLineEdit("0", parentAllPoslbls);
 
-    mTransformScaleLblX = new QLineEdit("1", parentAllScalelbls);
-    mTransformScaleLblY = new QLineEdit("1", parentAllScalelbls);
-    mTransformScaleLblZ = new QLineEdit("1", parentAllScalelbls);
+    mTrLbls[3] = new QLineEdit("0", parentAllRotlbls);
+    mTrLbls[4] = new QLineEdit("0", parentAllRotlbls);
+    mTrLbls[5] = new QLineEdit("0", parentAllRotlbls);
+
+    mTrLbls[6] = new QLineEdit("1", parentAllScalelbls);
+    mTrLbls[7] = new QLineEdit("1", parentAllScalelbls);
+    mTrLbls[8] = new QLineEdit("1", parentAllScalelbls);
 
     mTransformLayout->addWidget(parentAllPoslbls);
     mTransformLayout->addWidget(parentAllRotlbls);
     mTransformLayout->addWidget(parentAllScalelbls);
 
 
-    posLayout->addWidget(mTransformPosLblX);
-    posLayout->addWidget(mTransformPosLblY);
-    posLayout->addWidget(mTransformPosLblZ);
+    posLayout->addWidget(mTrLbls[0]);
+    posLayout->addWidget(mTrLbls[1]);
+    posLayout->addWidget(mTrLbls[2]);
     parentAllPoslbls->setLayout(posLayout);
 
-    rotLayout->addWidget(mTransformRotLblX);
-    rotLayout->addWidget(mTransformRotLblY);
-    rotLayout->addWidget(mTransformRotLblZ);
+    rotLayout->addWidget(mTrLbls[3]);
+    rotLayout->addWidget(mTrLbls[4]);
+    rotLayout->addWidget(mTrLbls[5]);
     parentAllRotlbls->setLayout(rotLayout);
 
 
-    scaleLayout->addWidget(mTransformScaleLblX);
-    scaleLayout->addWidget(mTransformScaleLblY);
-    scaleLayout->addWidget(mTransformScaleLblZ);
+    scaleLayout->addWidget(mTrLbls[6]);
+    scaleLayout->addWidget(mTrLbls[7]);
+    scaleLayout->addWidget(mTrLbls[8]);
 
     curModelLbl = new QLabel("0",this);
-    camXRotate = new QLineEdit(this);
+    camXRotate = new QLabel(this);
+    bMotions[0] = new QPushButton("forward");
+    bMotions[1] = new QPushButton("backward");
+    bMotions[2] = new QPushButton("right");
+    bMotions[3] = new QPushButton("left");
     mTransformLayout->addWidget(curModelLbl);
     mTransformLayout->addWidget(camXRotate);
+    mTransformLayout->addWidget(bMotions[0]);
+    mTransformLayout->addWidget(bMotions[1]);
+    mTransformLayout->addWidget(bMotions[2]);
+    mTransformLayout->addWidget(bMotions[3]);
 
     parentAllScalelbls->setLayout(scaleLayout);
 
     mTransformLabel->setLayout(mTransformLayout);
 
     //connect position fields
-    connect(mTransformPosLblX,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[0],SIGNAL(textEdited(const QString)),
             SLOT(slotChangePosition(const QString)));
-    connect(mTransformPosLblY,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[1],SIGNAL(textEdited(const QString)),
             SLOT(slotChangePosition(const QString)));
-    connect(mTransformPosLblZ,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[2],SIGNAL(textEdited(const QString)),
             SLOT(slotChangePosition(const QString)));
 
     //connect rotation fields
-    connect(mTransformRotLblX,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[3],SIGNAL(textEdited(const QString)),
             SLOT(slotChangeRotation(const QString)));
-    connect(mTransformRotLblY,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[4],SIGNAL(textEdited(const QString)),
             SLOT(slotChangeRotation(const QString)));
-    connect(mTransformRotLblZ,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[5],SIGNAL(textEdited(const QString)),
             SLOT(slotChangeRotation(const QString)));  
 
     //connect scale fields
-    connect(mTransformScaleLblX,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[6],SIGNAL(textEdited(const QString)),
             SLOT(slotChangeScale(const QString)));
-    connect(mTransformScaleLblY,SIGNAL(textEdited(const QString)),
+    connect(mTrLbls[7],SIGNAL(textEdited(const QString)),
             SLOT(slotChangeScale(const QString)));
-    connect(mTransformScaleLblZ,SIGNAL(textEdited(const QString)),
-            SLOT(slotChangeScale(const QString)));
-
-    connect(camXRotate,SIGNAL(textChanged(const QString)),SLOT(slotChangeCamRot(const QString)));
+    connect(mTrLbls[8],SIGNAL(textEdited(const QString)),
+            SLOT(slotChangeScale(const QString)));   
 }
 
 Inspector::~Inspector(){
@@ -93,10 +100,10 @@ void Inspector::slotChangePosition(const QString text){
 
     Vector3 p = curModel->getPosition();//position
 
-    if(lineSender == mTransformPosLblX){
+    if(lineSender == mTrLbls[0]){
         p.x = value;
     }
-    else if(lineSender == mTransformPosLblY){
+    else if(lineSender == mTrLbls[1]){
         p.y = value;
     }
     else{
@@ -123,10 +130,10 @@ void Inspector::slotChangeRotation(const QString text){
 
     Vector3 r  = curModel->getRotation();//rotation
 
-    if(lineSender == mTransformRotLblX){
+    if(lineSender == mTrLbls[3]){
         r.x = value;
     }
-    else if(lineSender == mTransformRotLblY){
+    else if(lineSender == mTrLbls[4]){
         r.y = value;
     }
     else{
@@ -152,10 +159,10 @@ void Inspector::slotChangeScale(const QString text){
     QLineEdit* lineSender = (QLineEdit*) sender();
 
     Vector3 s = curModel->getScale();//scale
-    if(lineSender == mTransformScaleLblX){
+    if(lineSender == mTrLbls[6]){
         s.x = value;
     }
-    else if(lineSender == mTransformScaleLblY){
+    else if(lineSender == mTrLbls[7]){
         s.y = value;
     }
     else{
@@ -186,13 +193,21 @@ void Inspector::setCurModel(Model* model){
     connect(curModel,SIGNAL(signalChangeRotation(Vector3)),
             SLOT(slotSetRotation(Vector3)));
 }
-void Inspector::slotChangeCamRot(const QString txt){
-    float value = (QStringRef(&txt, 0, txt.size())).toFloat();
-    mWindow->xCamRot = value;
-    curModel->additionalTurn.y = value;
+void Inspector::slotChangeCamRot(GLfloat value){
+   // QStringRef value(&txt, 0, txt.size());//.toFloat();
+    camXRotate->setText("Camera x rotate = " + QString::number(value));
+
 }
 void Inspector::slotSetRotation(Vector3 vec){
-     mTransformRotLblX->setText(QString::number(vec.x));
-     mTransformRotLblY->setText(QString::number(vec.y));
-     mTransformRotLblZ->setText(QString::number(vec.z));
+     mTrLbls[3]->setText(QString::number(vec.x));
+     mTrLbls[4]->setText(QString::number(vec.y));
+     mTrLbls[5]->setText(QString::number(vec.z));
+}
+void Inspector::setMainWindow(GLWindow *w){
+    mWindow = w;    
+    connect(bMotions[0], SIGNAL(clicked()), w ,SLOT(slotForwardMove()));
+    connect(bMotions[1], SIGNAL(clicked()), w ,SLOT(slotBackwardMove()));
+    connect(bMotions[2], SIGNAL(clicked()), w ,SLOT(slotRightMove()));
+    connect(bMotions[3], SIGNAL(clicked()), w ,SLOT(slotLeftMove()));
+    connect(mWindow, SIGNAL(signalChangeYCamRot(GLfloat)),SLOT(slotChangeCamRot(GLfloat)));
 }

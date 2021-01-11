@@ -8,6 +8,7 @@ class Model;
 
 class GLWindow: public QGLWidget, public Component
 {
+    Q_OBJECT
 protected:
     void initializeGL();
     void resizeGL(int width, int height);
@@ -19,8 +20,8 @@ public:
     Model* curmodel;
     GLWindow(QWidget* parent = 0);
     QList<Model*> models;
-    GLfloat xCamRot;
-    void update();
+    double yCamRot;
+    void update();   
 private:
     void rotateCamera(bool right);
     int faceAtPosition(const QPoint &pos);
@@ -29,6 +30,19 @@ private:
     int globPosY;
     int globWidth;
     int globHeight;
+    float speed = 10;
+
+    void updateWindow();
+    enum motionVector{forward, backward, right, left};
+    void move(motionVector mVector,bool multiply);
+public slots:
+    void slotForwardMove();
+    void slotBackwardMove();
+    void slotRightMove();
+    void slotLeftMove();
+signals:
+    void signalChangeYCamRot(GLfloat);
+
 };
 
 #endif // GLWINDOW_H

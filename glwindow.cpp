@@ -5,6 +5,7 @@
 #include <GL/glu.h>
 #include "vector3.h"
 #include <QApplication>
+#include "math.h"
 
 GLWindow::GLWindow(QWidget* parent) : QGLWidget(parent)
 {
@@ -27,10 +28,7 @@ void GLWindow::resizeGL(int width, int height)
     glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
     glMatrixMode(GL_MODELVIEW);
 
-    globPosX = mapToGlobal(pos()).x();
-    globPosY = mapToGlobal(pos()).y();
-    globWidth = mapToGlobal(QPoint(width, height)).x();
-    globHeight = mapToGlobal(QPoint(width, height)).y();
+    updateWindow();
 }
 
 void GLWindow::paintGL()
@@ -43,7 +41,7 @@ void GLWindow::paintGL()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(-150, 150, -112, 112, -150, 1500);//glOrtho(hor+, hor-, up+ , up-, nearPlane, farPlane);
-    gluPerspective(60.0, aspect, 1.0, 2000.0);//fov,aspect
+    gluPerspective(60.0, aspect, 0.01, 2000.0);//fov,aspect
     glMatrixMode(GL_MODELVIEW);
 
     for(int i = 0; i < models.size();i++){
@@ -58,18 +56,17 @@ void GLWindow::mousePressEvent(QMouseEvent *event){
 void GLWindow::mouseMoveEvent(QMouseEvent *event)
 {
     /* GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
-        GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
-        Vector3 newRot = curmodel->getRotation();
-        if (event->buttons() & Qt::LeftButton) {
-            newRot.x += 180 * dy;
-            newRot.y += 180 * dx;
-        } else if (event->buttons() & Qt::RightButton) {
-            newRot.x += 180 * dy;
-            newRot.z += 180 * dx;
-        }
-        curmodel->setRotation(newRot);*/
+            GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
+            Vector3 newRot = curmodel->getRotation();
+            if (event->buttons() & Qt::LeftButton) {
+                newRot.x += 180 * dy;
+                newRot.y += 180 * dx;
+            } else if (event->buttons() & Qt::RightButton) {
+                newRot.x += 180 * dy;
+                newRot.z += 180 * dx;
+            }
+            curmodel->setRotation(newRot);*/
 
-    static int count;
     int posW = cursor().pos().x();
     int posH = cursor().pos().y();
 
@@ -80,12 +77,13 @@ void GLWindow::mouseMoveEvent(QMouseEvent *event)
         int difference = posW - (globWidth + globPosX)/2;
         if(difference > 0){
 
-            qDebug()<<"> 0"<<count++;
+            qDebug()<<"> 0";
             rotateCamera(true);
+
         }
         else if (difference < 0){
             rotateCamera(false);
-            qDebug()<<"< 0"<<count++;
+            qDebug()<<"< 0";
         }
 
     }
@@ -99,7 +97,7 @@ void GLWindow::mouseDoubleClickEvent(QMouseEvent *event)
         QColor color = QColorDialog::getColor( curmodel->faceColors[face],
                                                this);
         if (color.isValid()) {
-            curmodel->faceColors[face] = color;            
+            curmodel->faceColors[face] = color;
         }
     }
 }
@@ -117,8 +115,8 @@ int GLWindow::faceAtPosition(const QPoint &pos)
     glPushMatrix();
     glLoadIdentity();
     gluPickMatrix((GLdouble)pos.x(),
-    (GLdouble) (viewport[3] - pos.y()),
-    5.0, 5.0, viewport);
+                  (GLdouble) (viewport[3] - pos.y()),
+            5.0, 5.0, viewport);
 
     GLfloat x = (GLfloat)width() / height();
     glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
@@ -133,11 +131,48 @@ int GLWindow::faceAtPosition(const QPoint &pos)
 }
 
 void GLWindow::update(){
-  updateGL();
+    updateGL();
 }
 void GLWindow::rotateCamera(bool right){
-for(int i =0; i< models.size();i++){
-    Vector3 mRot = models[i]->getRotation();
-    models[i]->setRotation(Vector3(mRot.x,mRot.y + (right ? 1 : -1),mRot.z));
+    yCamRot += right ? 1 : -1;
+    for(int i =0; i< models.size();i++){
+        Vector3 mRot = models[i]->getRotation();
+        models[i]->setRotation(Vector3(mRot.x,mRot.y + (right ? 1 : -1),mRot.z));
+    }
+    emit signalChangeYCamRot(yCamRot);
 }
+void GLWindow::updateWindow(){
+    globPosX = mapToGlobal(pos()).x();
+    globPosY = mapToGlobal(pos()).y();
+    globWidth = mapToGlobal(QPoint(width(), height())).x();
+    globHeight = mapToGlobal(QPoint(width(), height())).y();
+}
+void GLWindow::slotForwardMove(){
+    move(forward, true);
+}
+void GLWindow::slotBackwardMove(){
+    move(backward, false);
+}
+void GLWindow::slotRightMove(){
+    move(right, false);
+}
+void GLWindow::slotLeftMove(){
+    move(left, true);
+}
+void GLWindow::move(motionVector mVector,bool multiply){
+    for(int i = 0; i< models.size();i++){
+        Vector3 mPos = models[i]->getPosition();
+        if(mVector == forward || mVector == backward){
+            mPos.z +=  cos(yCamRot * M_PI / 180) * speed * (multiply ? 1 : -1);
+            mPos.x +=  sin(yCamRot * M_PI / 180) * -speed * (multiply ? 1 : -1);
+        }
+        else{
+            mPos.z +=  sin(yCamRot * M_PI / 180) * speed * (multiply ? 1 : -1);
+            mPos.x +=  cos(yCamRot * M_PI / 180) * -speed * (multiply ? -1 : 1);
+        }
+        models[i]->setPosition(mPos);
+    }
+    qDebug() <<  "z is " +  QString::number(cos(yCamRot * M_PI / 180) * speed);
+    qDebug() << "x is " +  QString::number(sin(yCamRot * M_PI / 180) * speed);
+    qDebug() <<mVector << multiply;
 }

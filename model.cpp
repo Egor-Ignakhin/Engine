@@ -3,7 +3,7 @@
 #include <GL/glu.h>
 
 Model::Model(GLWindow* parent, QString name) :
-    position(0,0,0), rotation(0,0,0), scale(1,1,1), additionalTurn(0,0,0)
+    position(0,0,0), rotation(0,0,0), scale(1,1,1)
 {
     pWindow = parent;
     pWindow->models.append(this);

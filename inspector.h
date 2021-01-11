@@ -10,33 +10,28 @@ class Inspector : public Editor
 {
     Q_OBJECT
 public:
-    GLWindow* mWindow;
     Inspector();
-    ~Inspector();   
+    ~Inspector();
     void setCurModel(Model*);
+    void setMainWindow(GLWindow *);
+
 private:
+     GLWindow* mWindow;
     Model* curModel;
     QWidget* mTransformLabel;
     QVBoxLayout* mTransformLayout;
     Transform* mTransform;
 
-    QLineEdit* mTransformPosLblX;
-    QLineEdit* mTransformPosLblY;
-    QLineEdit* mTransformPosLblZ;
-    QLineEdit* mTransformRotLblX;
-    QLineEdit* mTransformRotLblY;
-    QLineEdit* mTransformRotLblZ;
-    QLineEdit* mTransformScaleLblX;
-    QLineEdit* mTransformScaleLblY;
-    QLineEdit* mTransformScaleLblZ;
+    QLineEdit* mTrLbls[9];// labels of transform cur-model. 0 - 2 : position. 3 - 5 : rotation. 6 - 8 : scale.
     QLabel* curModelLbl;
-    QLineEdit* camXRotate;
+    QLabel* camXRotate;
+    QPushButton* bMotions[4];
 
 private slots:
    void slotChangeRotation(const QString);
    void slotChangePosition(const QString);
    void slotChangeScale(const QString);
-   void slotChangeCamRot(const QString);
+   void slotChangeCamRot(GLfloat);
    void slotSetRotation(Vector3 vec);
 };
 

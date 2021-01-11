@@ -20,9 +20,7 @@ public:
 
     Vector3 getPosition();
     Vector3 getRotation();
-    Vector3 getScale();
-
-    Vector3 additionalTurn;
+    Vector3 getScale();    
 
 protected:
     QString mName;

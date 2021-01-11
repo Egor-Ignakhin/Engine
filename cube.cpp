@@ -26,9 +26,9 @@ void Cube::draw(){
     };
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glRotatef(rotation.x, 1.0 + additionalTurn.x, 0.0, 0.0 );
-    glRotatef(rotation.y, 0.0, 1.0 + additionalTurn.y, 0.0);
-    glRotatef(rotation.z, 0.0,  0.0, 1.0 + additionalTurn.z);
+    glRotatef(rotation.x, 1.0, 0.0, 0.0);
+    glRotatef(rotation.y, 0.0, 1.0, 0.0);
+    glRotatef(rotation.z, 0.0,  0.0, 1.0);
     glTranslatef(position.x,position.y,position.z);
     glScalef(scale.x, scale.y, scale.z);
 

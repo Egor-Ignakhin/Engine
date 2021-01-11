@@ -10,7 +10,7 @@ CoreEngine::CoreEngine()
     Inspector* inspector = new Inspector();
 
 
-    GLWindow* glw = new GLWindow;
+    GLWindow* glw = new GLWindow(editor);
     Cube* column1 = new Cube(glw, "column1"),
             *column2 = new Cube(glw,"column2"),
             *floor = new Cube(glw,"floor");
@@ -30,7 +30,7 @@ CoreEngine::CoreEngine()
     glw->curmodel = column1;
     editor->mLayout->addWidget(glw);
     editor->mLayout->addWidget(inspector);
-    inspector->mWindow = glw;
+    inspector->setMainWindow(glw);
     updates.append(glw);
 
     QTimer* timer = new QTimer(this);
