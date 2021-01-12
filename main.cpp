@@ -1,12 +1,10 @@
-#include <QApplication>
 #include "coreengine.h"
 
 int main(int argc, char** argv) {
-    QApplication app(argc, argv);
 
 
-   CoreEngine* core = new CoreEngine;
+   CoreEngine* core = new CoreEngine(argc,argv);
 
 
-    return app.exec();
+    return 0;
 }

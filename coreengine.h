@@ -11,7 +11,7 @@ class CoreEngine : QObject
 {
     Q_OBJECT
 public:
-    CoreEngine();
+    CoreEngine(int argc, char** argv);
     QList<Component*> updates;
 private slots:
     void callUpdates();

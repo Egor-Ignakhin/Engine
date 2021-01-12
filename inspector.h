@@ -26,6 +26,7 @@ private:
     QLabel* curModelLbl;
     QLabel* camXRotate;
     QPushButton* bMotions[4];
+    QPushButton* bGameMode;
 
 private slots:
    void slotChangeRotation(const QString);

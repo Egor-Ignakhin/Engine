@@ -54,12 +54,15 @@ Inspector::Inspector(){
     bMotions[1] = new QPushButton("backward");
     bMotions[2] = new QPushButton("right");
     bMotions[3] = new QPushButton("left");
+    bGameMode = new QPushButton("start");
+    bGameMode->setStyleSheet("background-color : red");
     mTransformLayout->addWidget(curModelLbl);
     mTransformLayout->addWidget(camXRotate);
     mTransformLayout->addWidget(bMotions[0]);
     mTransformLayout->addWidget(bMotions[1]);
     mTransformLayout->addWidget(bMotions[2]);
     mTransformLayout->addWidget(bMotions[3]);
+    mTransformLayout->addWidget(bGameMode);
 
     parentAllScalelbls->setLayout(scaleLayout);
 
@@ -210,4 +213,5 @@ void Inspector::setMainWindow(GLWindow *w){
     connect(bMotions[2], SIGNAL(clicked()), w ,SLOT(slotRightMove()));
     connect(bMotions[3], SIGNAL(clicked()), w ,SLOT(slotLeftMove()));
     connect(mWindow, SIGNAL(signalChangeYCamRot(GLfloat)),SLOT(slotChangeCamRot(GLfloat)));
+    connect(bGameMode, SIGNAL(clicked()), w,SLOT(slotChangeGameMode()));
 }

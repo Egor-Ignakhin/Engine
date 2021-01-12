@@ -10,6 +10,7 @@
 GLWindow::GLWindow(QWidget* parent) : QGLWidget(parent)
 {
     setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+     setFocusPolicy(Qt::StrongFocus);
 }
 void GLWindow::initializeGL()
 {
@@ -17,6 +18,7 @@ void GLWindow::initializeGL()
     glShadeModel(GL_FLAT);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+  //  installEventFilter(this);
 }
 
 void GLWindow::resizeGL(int width, int height)
@@ -53,43 +55,6 @@ void GLWindow::mousePressEvent(QMouseEvent *event){
     lastPos = event->pos();
 }
 
-void GLWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    /* GLfloat dx = (GLfloat) (event->x() - lastPos.x()) / width();
-            GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
-            Vector3 newRot = curmodel->getRotation();
-            if (event->buttons() & Qt::LeftButton) {
-                newRot.x += 180 * dy;
-                newRot.y += 180 * dx;
-            } else if (event->buttons() & Qt::RightButton) {
-                newRot.x += 180 * dy;
-                newRot.z += 180 * dx;
-            }
-            curmodel->setRotation(newRot);*/
-
-    int posW = cursor().pos().x();
-    int posH = cursor().pos().y();
-
-    if(posW > globPosX && posW < globWidth &&// intersect cursor
-            posH > globPosY && posH < globHeight){
-
-
-        int difference = posW - (globWidth + globPosX)/2;
-        if(difference > 0){
-
-            qDebug()<<"> 0";
-            rotateCamera(true);
-
-        }
-        else if (difference < 0){
-            rotateCamera(false);
-            qDebug()<<"< 0";
-        }
-
-    }
-    lastPos = event->pos();
-}
-
 void GLWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
     int face = faceAtPosition(event->pos());
@@ -98,6 +63,66 @@ void GLWindow::mouseDoubleClickEvent(QMouseEvent *event)
                                                this);
         if (color.isValid()) {
             curmodel->faceColors[face] = color;
+        }
+    }
+}
+bool GLWindow::eventFilter(QObject* obj, QEvent* event){
+    if(event->type() == QEvent::MouseMove){
+        if(!isGameMode)
+            return false;
+        static bool settedPos;
+        if((settedPos = !settedPos) == true){ // last move is correctly
+            lastPos = QPoint(0,0);
+            return false;
+        }
+        QMouseEvent* me = static_cast<QMouseEvent*>(event);
+
+        float dx = sensivity * ((float) (me->x() - lastPos.x()) / width());/*
+                                                        GLfloat dy = (GLfloat) (event->y() - lastPos.y()) / height();
+                                                        Vector3 newRot = curmodel->getRotation();
+                                                        if (event->buttons() & Qt::LeftButton) {
+                                                            newRot.x += 180 * dy;
+                                                            newRot.y += 180 * dx;
+                                                        } else if (event->buttons() & Qt::RightButton) {
+                                                            newRot.x += 180 * dy;
+                                                            newRot.z += 180 * dx;
+                                                        }
+                                                        curmodel->setRotation(newRot);*/
+        int posW = cursor().pos().x();
+        int posH = cursor().pos().y();
+
+        if(posW > globPosX && posW < globWidth &&// intersect cursor
+                posH > globPosY && posH < globHeight){
+
+
+            float differenceW = posW - (globWidth + globPosX) / 2;
+            float differenceH = posH - (globHeight + globPosY) / 2;
+            qDebug() << dx;
+
+            if(differenceW > 0)
+                rotateCamera(dx);
+            if(differenceW < 0)
+                rotateCamera(-dx);
+
+
+            lastPos = me->pos();
+            cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);
+        }
+    }
+    else if(event->type() == QEvent::Leave){
+        if(isGameMode){
+            cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);
+        }
+    }
+    return false;
+}
+void GLWindow::keyPressEvent(QKeyEvent* event){
+    int key = event->key();//event->key() - целочисленный код клавиши
+    QString inputChar = (QString(QChar(key)));
+    qDebug() << inputChar;
+    if(event->key() == Qt::Key_Escape){
+        if(isGameMode){
+            slotChangeGameMode();
         }
     }
 }
@@ -130,16 +155,16 @@ int GLWindow::faceAtPosition(const QPoint &pos)
     return buffer[3];
 }
 
-void GLWindow::update(){
+void GLWindow::update(){  
     updateGL();
 }
-void GLWindow::rotateCamera(bool right){
-    yCamRot += right ? 1 : -1;
-    for(int i =0; i< models.size();i++){
+void GLWindow::rotateCamera(float multiply){
+    yCamRot += multiply;
+    for(int i = 0; i< models.size();i++){
         Vector3 mRot = models[i]->getRotation();
-        models[i]->setRotation(Vector3(mRot.x,mRot.y + (right ? 1 : -1),mRot.z));
+        models[i]->setRotation(Vector3(mRot.x, mRot.y + multiply, mRot.z));
     }
-    emit signalChangeYCamRot(yCamRot);
+    emit signalChangeYCamRot(yCamRot);    
 }
 void GLWindow::updateWindow(){
     globPosX = mapToGlobal(pos()).x();
@@ -175,4 +200,16 @@ void GLWindow::move(motionVector mVector,bool multiply){
     qDebug() <<  "z is " +  QString::number(cos(yCamRot * M_PI / 180) * speed);
     qDebug() << "x is " +  QString::number(sin(yCamRot * M_PI / 180) * speed);
     qDebug() <<mVector << multiply;
+}
+void GLWindow::slotChangeGameMode(){
+    isGameMode = !isGameMode;
+    qDebug()<<isGameMode;
+
+    setMouseTracking(isGameMode);
+    if(isGameMode){
+        ShowCursor(FALSE);
+    }
+    else{
+        ShowCursor(TRUE);
+    }
 }

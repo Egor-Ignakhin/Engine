@@ -2,8 +2,10 @@
 #include "component.h"
 #include <QTimer>
 
-CoreEngine::CoreEngine()
+CoreEngine::CoreEngine(int argc, char** argv)
 {
+    QApplication app(argc, argv);
+
     Editor* editor = new Editor;
     editor->init();
 
@@ -11,6 +13,7 @@ CoreEngine::CoreEngine()
 
 
     GLWindow* glw = new GLWindow(editor);
+    app.installEventFilter(glw);
     Cube* column1 = new Cube(glw, "column1"),
             *column2 = new Cube(glw,"column2"),
             *floor = new Cube(glw,"floor");
@@ -36,6 +39,8 @@ CoreEngine::CoreEngine()
     QTimer* timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()),this, SLOT(callUpdates()));
     timer->start(1); //time specified in sec
+
+    app.exec();
 }
 
 void CoreEngine::callUpdates(){

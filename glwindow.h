@@ -14,8 +14,9 @@ protected:
     void resizeGL(int width, int height);
     void paintGL();
     void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
+    bool eventFilter(QObject* obj, QEvent* event);
+    void keyPressEvent(QKeyEvent* event);
 public:    
     Model* curmodel;
     GLWindow(QWidget* parent = 0);
@@ -23,7 +24,7 @@ public:
     double yCamRot;
     void update();   
 private:
-    void rotateCamera(bool right);
+    void rotateCamera(float multiply);
     int faceAtPosition(const QPoint &pos);
     QPoint lastPos;
     int globPosX;
@@ -31,6 +32,8 @@ private:
     int globWidth;
     int globHeight;
     float speed = 10;
+    float sensivity = 3;
+    bool isGameMode = false;
 
     void updateWindow();
     enum motionVector{forward, backward, right, left};
@@ -40,6 +43,7 @@ public slots:
     void slotBackwardMove();
     void slotRightMove();
     void slotLeftMove();
+    void slotChangeGameMode();
 signals:
     void signalChangeYCamRot(GLfloat);
 
