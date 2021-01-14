@@ -14,54 +14,59 @@ Inspector::Inspector(){
     QWidget* parentAllPoslbls = new QWidget(this);
     QWidget* parentAllRotlbls = new QWidget(this);
     QWidget* parentAllScalelbls = new QWidget(this);
+    QLabel* titleTransform = new QLabel("Transform", this);
+    QFont titlesFont = titleTransform->font();
+    titlesFont.setPixelSize(25);
+    titleTransform->setFont(titlesFont);
 
-
+    QLabel* titlePosition = new QLabel("Position", this);
     mTrLbls[0] = new QLineEdit("0", parentAllPoslbls);
     mTrLbls[1] = new QLineEdit("0", parentAllPoslbls);
     mTrLbls[2] = new QLineEdit("0", parentAllPoslbls);
 
+    QLabel* titleRotation = new QLabel("Rotation", this);
     mTrLbls[3] = new QLineEdit("0", parentAllRotlbls);
     mTrLbls[4] = new QLineEdit("0", parentAllRotlbls);
     mTrLbls[5] = new QLineEdit("0", parentAllRotlbls);
 
+    QLabel* titleScale = new QLabel("Scale", this);
     mTrLbls[6] = new QLineEdit("1", parentAllScalelbls);
     mTrLbls[7] = new QLineEdit("1", parentAllScalelbls);
     mTrLbls[8] = new QLineEdit("1", parentAllScalelbls);
 
+    titleTransform->setAlignment(Qt::AlignHCenter);
+    mTransformLayout->addWidget(titleTransform);
     mTransformLayout->addWidget(parentAllPoslbls);
     mTransformLayout->addWidget(parentAllRotlbls);
     mTransformLayout->addWidget(parentAllScalelbls);
 
-
+    posLayout->addWidget(titlePosition);
     posLayout->addWidget(mTrLbls[0]);
     posLayout->addWidget(mTrLbls[1]);
     posLayout->addWidget(mTrLbls[2]);
     parentAllPoslbls->setLayout(posLayout);
 
+    rotLayout->addWidget(titleRotation);
     rotLayout->addWidget(mTrLbls[3]);
     rotLayout->addWidget(mTrLbls[4]);
     rotLayout->addWidget(mTrLbls[5]);
     parentAllRotlbls->setLayout(rotLayout);
 
-
+    scaleLayout->addWidget(titleScale);
     scaleLayout->addWidget(mTrLbls[6]);
     scaleLayout->addWidget(mTrLbls[7]);
     scaleLayout->addWidget(mTrLbls[8]);
 
     curModelLbl = new QLabel("0",this);
-    camXRotate = new QLabel(this);
-    bMotions[0] = new QPushButton("forward");
-    bMotions[1] = new QPushButton("backward");
-    bMotions[2] = new QPushButton("right");
-    bMotions[3] = new QPushButton("left");
+    camRotateVector[0] = new QLabel(this);
+    camRotateVector[1] = new QLabel(this);
+    camRotateVector[2] = new QLabel(this);
     bGameMode = new QPushButton("start");
     bGameMode->setStyleSheet("background-color : red");
     mTransformLayout->addWidget(curModelLbl);
-    mTransformLayout->addWidget(camXRotate);
-    mTransformLayout->addWidget(bMotions[0]);
-    mTransformLayout->addWidget(bMotions[1]);
-    mTransformLayout->addWidget(bMotions[2]);
-    mTransformLayout->addWidget(bMotions[3]);
+    mTransformLayout->addWidget(camRotateVector[0]);
+    mTransformLayout->addWidget(camRotateVector[1]);
+    mTransformLayout->addWidget(camRotateVector[2]);
     mTransformLayout->addWidget(bGameMode);
 
     parentAllScalelbls->setLayout(scaleLayout);
@@ -196,9 +201,11 @@ void Inspector::setCurModel(Model* model){
     connect(curModel,SIGNAL(signalChangeRotation(Vector3)),
             SLOT(slotSetRotation(Vector3)));
 }
-void Inspector::slotChangeCamRot(GLfloat value){
+void Inspector::slotChangeCamRot(Vector3 vec){
    // QStringRef value(&txt, 0, txt.size());//.toFloat();
-    camXRotate->setText("Camera x rotate = " + QString::number(value));
+    camRotateVector[0] ->setText("Camera x rotate = " + QString::number(vec.x));
+    camRotateVector[1] ->setText("Camera y rotate = " + QString::number(vec.y));
+    camRotateVector[2] ->setText("Camera z rotate = " + QString::number(vec.z));
 
 }
 void Inspector::slotSetRotation(Vector3 vec){
@@ -207,11 +214,7 @@ void Inspector::slotSetRotation(Vector3 vec){
      mTrLbls[5]->setText(QString::number(vec.z));
 }
 void Inspector::setMainWindow(GLWindow *w){
-    mWindow = w;    
-    connect(bMotions[0], SIGNAL(clicked()), w ,SLOT(slotForwardMove()));
-    connect(bMotions[1], SIGNAL(clicked()), w ,SLOT(slotBackwardMove()));
-    connect(bMotions[2], SIGNAL(clicked()), w ,SLOT(slotRightMove()));
-    connect(bMotions[3], SIGNAL(clicked()), w ,SLOT(slotLeftMove()));
-    connect(mWindow, SIGNAL(signalChangeYCamRot(GLfloat)),SLOT(slotChangeCamRot(GLfloat)));
+    mWindow = w;       
+    connect(mWindow, SIGNAL(signalChangeCamRot(Vector3)),SLOT(slotChangeCamRot(Vector3)));
     connect(bGameMode, SIGNAL(clicked()), w,SLOT(slotChangeGameMode()));
 }

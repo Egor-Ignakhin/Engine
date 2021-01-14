@@ -16,7 +16,7 @@ public:
     void setMainWindow(GLWindow *);
 
 private:
-     GLWindow* mWindow;
+    GLWindow* mWindow;
     Model* curModel;
     QWidget* mTransformLabel;
     QVBoxLayout* mTransformLayout;
@@ -24,15 +24,14 @@ private:
 
     QLineEdit* mTrLbls[9];// labels of transform cur-model. 0 - 2 : position. 3 - 5 : rotation. 6 - 8 : scale.
     QLabel* curModelLbl;
-    QLabel* camXRotate;
-    QPushButton* bMotions[4];
+    QLabel* camRotateVector[3];
     QPushButton* bGameMode;
 
 private slots:
    void slotChangeRotation(const QString);
    void slotChangePosition(const QString);
    void slotChangeScale(const QString);
-   void slotChangeCamRot(GLfloat);
+   void slotChangeCamRot(Vector3 vec);
    void slotSetRotation(Vector3 vec);
 };
 
