@@ -4,6 +4,7 @@
 #include "glwindow.h"
 #include "cube.h"
 #include "inspector.h"
+#include "level.h"
 
 class Component;
 
@@ -12,9 +13,12 @@ class CoreEngine : QObject
     Q_OBJECT
 public:
     CoreEngine(int argc, char** argv);
-    QList<Component*> updates;
+    QList<Component*> updates;    
+
 private slots:
     void callUpdates();
+private:
+    GLWindow* glw;
 };
 
 #endif // COREENGINE_H

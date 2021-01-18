@@ -5,12 +5,13 @@
 #include "vector3.h"
 #include <QGLWidget>
 #include "glwindow.h"
+class Level;
 
 class Model : public QObject
 {    
     Q_OBJECT
 public:
-    Model(GLWindow* parent, QString name);
+    Model(Level* pLevel, QString name);
     QString name();
     void setPosition(Vector3 vec);
     void setRotation(Vector3 vec);

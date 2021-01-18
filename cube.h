@@ -6,7 +6,7 @@
 class Cube : public Model
 {
 public:
-    Cube(GLWindow* parent, QString name);
+    Cube(Level* pLevel, QString name);
     virtual void draw();
 };
 

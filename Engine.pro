@@ -17,6 +17,8 @@ SOURCES += \
     editor.cpp \
     glwindow.cpp \
     inspector.cpp \
+    level.cpp \
+    level1.cpp \
     main.cpp \
     model.cpp \
     transform.cpp \
@@ -30,6 +32,8 @@ HEADERS += \
     editor.h \
     glwindow.h \
     inspector.h \
+    level.h \
+    level1.h \
     model.h \
     transform.h \
     vector3.h

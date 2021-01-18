@@ -1,4 +1,5 @@
 #include "glwindow.h"
+#include "level.h"
 #include "CoreTime.h"
 #include <QColorDialog>
 #include <QDebug>
@@ -9,7 +10,7 @@
 
 GLWindow::GLWindow(QWidget* parent) : QGLWidget(parent), camRotation(0,0,0)
 {
-    setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+    setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));    
     setFocusPolicy(Qt::StrongFocus);
 }
 void GLWindow::initializeGL()
@@ -22,13 +23,6 @@ void GLWindow::initializeGL()
 
 void GLWindow::resizeGL(int width, int height)
 {
-    glViewport(0, 0, width, height);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    GLfloat x = (GLfloat)width / height;
-    glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
-    glMatrixMode(GL_MODELVIEW);
-
     updateWindow();
 }
 
@@ -41,25 +35,25 @@ void GLWindow::paintGL()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     double aspect = width() / height();
-    glOrtho(-150, 150, -112, 112, -2000.0, 2000.0);//glOrtho(hor+, hor-, up+ , up-, nearPlane, farPlane);
-    gluPerspective(60.0, aspect, 0.01, 2000.0);//fov,aspect
+    glOrtho(-100, 100, -100, 100, -200.0, 2000.0);//glOrtho(hor+, hor-, up+ , up-, nearPlane, farPlane);
+    gluPerspective(60.0, aspect, 0, 2000.0);//fov,aspect
     glMatrixMode(GL_MODELVIEW);
 
-    for(int i = 0; i < models.size();i++){
-        models[i]->draw();
+    for(int i = 0; i < currentLvl->models.size();i++){
+        currentLvl->models[i]->draw();
     }
 }
 
 void GLWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    int face = faceAtPosition(event->pos());
-    if (face != -1) {
-        QColor color = QColorDialog::getColor( curmodel->faceColors[face],
-                                               this);
-        if (color.isValid()) {
-            curmodel->faceColors[face] = color;
-        }
-    }
+   // int face = faceAtPosition(event->pos());
+    //if (face != -1) {
+      //  QColor color = QColorDialog::getColor( curmodel->faceColors[face],
+       //                                        this);
+        //if (color.isValid()) {
+          //  curmodel->faceColors[face] = color;
+        //}
+    //}
 }
 bool GLWindow::eventFilter(QObject* obj, QEvent* event){
 
@@ -124,8 +118,8 @@ int GLWindow::faceAtPosition(const QPoint &pos)
 
     GLfloat x = (GLfloat)width() / height();
     glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
-    for(int i = 0; i < models.size();i++){
-        models[i]->draw();
+    for(int i = 0; i < currentLvl->models.size();i++){
+        currentLvl->models[i]->draw();
     }
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -136,20 +130,6 @@ int GLWindow::faceAtPosition(const QPoint &pos)
 
 void GLWindow::update(){
     if(isGameMode){
-        QPoint currentPos = cursor().pos();//текущая позиция по Иксу
-        cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);//set in center window
-
-        if(currentPos.x() > globPosX && currentPos.y() < globWidth &&// intersect cursor
-                currentPos.x() > globPosY && currentPos.y() < globHeight){
-
-            //смещение относительно прошлого кадра
-            float dx = (currentPos.x() - (globWidth + globPosX) / 2) * 0.1f;
-            float dy = (currentPos.y() - (globHeight + globPosY) / 2) * 0.1f;
-
-            rotateCamera(horizontal, dx * sensivity);//поворот относительно смещения
-            rotateCamera(vertical, dy * sensivity);//поворот относительно смещения
-        }
-
         if(keyPress_W){
             move(forward, true);
         }
@@ -161,6 +141,19 @@ void GLWindow::update(){
         }
         if(keyPress_D){
             move(right, false);
+        }
+        QPoint currentPos = cursor().pos();//текущая позиция
+        cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);//set in center window
+
+        if(currentPos.x() > globPosX && currentPos.y() < globWidth &&// intersect cursor
+                currentPos.x() > globPosY && currentPos.y() < globHeight){
+
+
+            float dx = (currentPos.x() - (globWidth + globPosX) / 2) * 0.1f;
+            float dy = (currentPos.y() - (globHeight + globPosY) / 2) * 0.1f;
+
+            rotateCamera(horizontal, dx * sensivity);//поворот относительно смещения
+            rotateCamera(vertical, dy * sensivity);//поворот относительно смещения
         }
     }
 
@@ -177,22 +170,26 @@ void GLWindow::update(){
                                                                                         }curmodel->setRotation(newRot);*/
 }
 
+void GLWindow::changeLevel(Level* l){
+    currentLvl = l;
+}
+
 void GLWindow::rotateCamera(axis ax , float multiply){
     multiply *= CoreTime::deltaTime;
     if(ax == horizontal){
         camRotation.y += multiply;
-        for(int i = 0; i< models.size(); i++){
-            Vector3 mRot = models[i]->getRotation();
+        for(int i = 0; i< currentLvl->models.size(); i++){
+            Vector3 mRot = currentLvl->models[i]->getRotation();
             mRot.y += multiply;
-            models[i]->setRotation(mRot);
+            currentLvl->models[i]->setRotation(mRot);
         }
     }
     else{ // vertical
         camRotation.x += multiply;
-        for(int i = 0; i< models.size(); i++){
-            Vector3 mRot = models[i]->getRotation();
+        for(int i = 0; i< currentLvl->models.size(); i++){
+            Vector3 mRot = currentLvl->models[i]->getRotation();
             mRot.x += multiply;
-            models[i]->setRotation(mRot);
+            currentLvl->models[i]->setRotation(mRot);
         }
     }
      emit signalChangeCamRot(camRotation);
@@ -206,8 +203,8 @@ void GLWindow::updateWindow(){
 
 void GLWindow::move(motionVector mVector,bool multiply){
     multiply *= CoreTime::deltaTime;
-    for(int i = 0; i< models.size();i++){
-        Vector3 mPos = models[i]->getPosition();
+    for(int i = 0; i< currentLvl->models.size();i++){
+        Vector3 mPos = currentLvl->models[i]->getPosition();
         if(mVector == forward || mVector == backward){
             mPos.z +=  cos(camRotation.y * M_PI / 180) * speed * (multiply ? 1 : -1);
             mPos.x +=  sin(camRotation.y * M_PI / 180) * -speed * (multiply ? 1 : -1);
@@ -216,21 +213,21 @@ void GLWindow::move(motionVector mVector,bool multiply){
             mPos.z +=  sin(camRotation.y * M_PI / 180) * speed * (multiply ? 1 : -1);
             mPos.x +=  cos(camRotation.y * M_PI / 180) * -speed * (multiply ? -1 : 1);
         }
-        models[i]->setPosition(mPos);
+        currentLvl->models[i]->setPosition(mPos);
     }
-    qDebug() <<  "z is " +  QString::number(cos(camRotation.y * M_PI / 180) * speed);
-    qDebug() << "x is " +  QString::number(sin(camRotation.y * M_PI / 180) * speed);
-    qDebug() <<mVector << multiply;
+    //qDebug() <<  "z is " +  QString::number(cos(camRotation.y * M_PI / 180) * speed);
+    //qDebug() << "x is " +  QString::number(sin(camRotation.y * M_PI / 180) * speed);
+    //qDebug() <<mVector << multiply;
 }
-void GLWindow::slotChangeGameMode(){
+void GLWindow::slotChangeGameMode(){       
     isGameMode = !isGameMode;
-    qDebug()<<isGameMode;
-
     setMouseTracking(isGameMode);
-    if(isGameMode){
+
+    if(isGameMode){                  
         ShowCursor(FALSE);
     }
     else{
-        ShowCursor(TRUE);
+        ShowCursor(TRUE);        
     }
+    cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);//set in center window
 }

@@ -1,6 +1,6 @@
 #include "cube.h"
 
-Cube::Cube(GLWindow* parent,QString name):Model(parent,name)
+Cube::Cube(Level* pLevel,QString name):Model(pLevel, name)
 {
     faceColors[0] = Qt::red;
     faceColors[1] = Qt::green;

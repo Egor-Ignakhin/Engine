@@ -6,6 +6,7 @@
 #include "vector3.h"
 
 class Model;
+class Level;
 
 class GLWindow: public QGLWidget, public Component
 {
@@ -18,12 +19,11 @@ protected:
     bool eventFilter(QObject* obj, QEvent* event);
     void keyPressEvent(QKeyEvent* event);
     void keyReleaseEvent(QKeyEvent* event);
-public:    
-    Model* curmodel;
+public:        
     GLWindow(QWidget* parent = 0);
-    QList<Model*> models;
     Vector3 camRotation;
     void update();   
+    void changeLevel(Level* l);
 private:
     enum axis {horizontal, vertical};
     void rotateCamera(axis ax,float multiply);
@@ -32,7 +32,7 @@ private:
     int globPosY;
     int globWidth;
     int globHeight;
-    float speed = 10;
+    float speed = 1;
     float sensivity = 3;
     bool isGameMode = false;
 
@@ -44,6 +44,7 @@ private:
     void updateWindow();
     enum motionVector{forward, backward, right, left};
     void move(motionVector mVector,bool multiply);
+    Level* currentLvl;
 public slots:    
     void slotChangeGameMode();
 signals:

@@ -1,13 +1,14 @@
 #include "model.h"
 #include <QColorDialog>
 #include <GL/glu.h>
+#include "level.h"
 
-Model::Model(GLWindow* parent, QString name) :
+Model::Model(Level* pLevel, QString name) :
     position(0,0,0), rotation(0,0,0), scale(1,1,1)
 {
-    pWindow = parent;
-    pWindow->models.append(this);
-    mName = name.isEmpty()? "New object" : name;
+    pWindow = pLevel->mainWindow;
+    pLevel->models.append(this);
+    mName = name.isEmpty()? "New object" : name;    
 }
 QString Model::name(){
     return mName;
