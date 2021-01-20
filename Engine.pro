@@ -19,6 +19,7 @@ SOURCES += \
     inspector.cpp \
     level.cpp \
     level1.cpp \
+    levelscreator.cpp \
     main.cpp \
     model.cpp \
     transform.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     inspector.h \
     level.h \
     level1.h \
+    levelscreator.h \
     model.h \
     transform.h \
     vector3.h

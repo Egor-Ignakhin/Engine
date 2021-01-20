@@ -2,7 +2,7 @@
 #define CORETIME_H
 #include "component.h"
 #include <QElapsedTimer>
-class CoreTime : public Component
+class CoreTime : public Component // класс является время-высчитывающим компонентом (например можно определить fps)
 {
 public:
     CoreTime();

@@ -2,35 +2,26 @@
 #define MODEL_H
 
 #include <QDebug>
-#include "vector3.h"
+#include "transform.h"
 #include <QGLWidget>
 #include "glwindow.h"
+
 class Level;
 
-class Model : public QObject
+class Model : public QObject // наследники могут быть отрисованы в окне OGL.
 {    
     Q_OBJECT
 public:
     Model(Level* pLevel, QString name);
     QString name();
-    void setPosition(Vector3 vec);
-    void setRotation(Vector3 vec);
-    void setScale(Vector3 vec);
+    Transform transform;
     virtual void draw() = 0;
-    QColor faceColors[6];
-
-    Vector3 getPosition();
-    Vector3 getRotation();
-    Vector3 getScale();    
+    QColor faceColors[6];    
 
 protected:
     QString mName;
-
-    Vector3 position;
-    Vector3 rotation;
-    Vector3 scale;
-
     GLWindow* pWindow;
+
 signals:
     void signalChangeRotation(Vector3);
 };

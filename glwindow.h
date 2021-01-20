@@ -8,7 +8,7 @@
 class Model;
 class Level;
 
-class GLWindow: public QGLWidget, public Component
+class GLWindow: public QGLWidget, public Component //класс OGL окна. через него проходят многие игровые механизмы
 {
     Q_OBJECT
 protected:
@@ -32,7 +32,7 @@ private:
     int globPosY;
     int globWidth;
     int globHeight;
-    float speed = 1;
+    float speed = 10;
     float sensivity = 3;
     bool isGameMode = false;
 

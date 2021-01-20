@@ -36,7 +36,7 @@ CoreEngine::CoreEngine(int argc, char** argv)
 float CoreTime::deltaTime;
 QElapsedTimer* CoreTime::timer;
 void CoreEngine::callUpdates(){
-    while(true){
+    while(!glw->isHidden()){
         CoreTime::timer->start();
         for(int i = 0; i< updates.size(); i++){
             updates[i]->update();

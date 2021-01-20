@@ -1,6 +1,7 @@
 #include "inspector.h"
 #include "glwindow.h"
 #include "vector3.h"
+#include "levelscreator.h"
 
 Inspector::Inspector(){
     mTransform = new Transform;
@@ -18,6 +19,7 @@ Inspector::Inspector(){
     QFont titlesFont = titleTransform->font();
     titlesFont.setPixelSize(25);
     titleTransform->setFont(titlesFont);
+    QPushButton* openCreator = new QPushButton("Open levels creator", this);
 
     QLabel* titlePosition = new QLabel("Position", this);
     mTrLbls[0] = new QLineEdit("0", parentAllPoslbls);
@@ -68,6 +70,7 @@ Inspector::Inspector(){
     mTransformLayout->addWidget(camRotateVector[1]);
     mTransformLayout->addWidget(camRotateVector[2]);
     mTransformLayout->addWidget(bGameMode);
+    mTransformLayout->addWidget(openCreator);
 
     parentAllScalelbls->setLayout(scaleLayout);
 
@@ -96,6 +99,9 @@ Inspector::Inspector(){
             SLOT(slotChangeScale(const QString)));
     connect(mTrLbls[8],SIGNAL(textEdited(const QString)),
             SLOT(slotChangeScale(const QString)));   
+
+    mLvlsCreator = new LevelsCreator;
+    connect(openCreator, SIGNAL(clicked()), mLvlsCreator, SLOT(open()));
 }
 
 Inspector::~Inspector(){
@@ -106,7 +112,7 @@ void Inspector::slotChangePosition(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    Vector3 p = curModel->getPosition();//position
+    Vector3 p = curModel->transform.position();//position
 
     if(lineSender == mTrLbls[0]){
         p.x = value;
@@ -117,7 +123,7 @@ void Inspector::slotChangePosition(const QString text){
     else{
         p.z = value;
     }
-     curModel->setPosition(p);
+     curModel->transform.setPosition(p);
 
     //if text is empty then set '0'
     if(!text.isEmpty()){
@@ -136,7 +142,7 @@ void Inspector::slotChangeRotation(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    Vector3 r  = curModel->getRotation();//rotation
+    Vector3 r  =  curModel->transform.rotation();//rotation
 
     if(lineSender == mTrLbls[3]){
         r.x = value;
@@ -148,7 +154,7 @@ void Inspector::slotChangeRotation(const QString text){
         r.z = value;
     }
 
-    curModel->setRotation(r);
+    curModel->transform.setRotation(r);
 
 
     //if text is empty then set '0'
@@ -166,7 +172,7 @@ void Inspector::slotChangeScale(const QString text){
     float value = (QStringRef(&text, 0, text.size())).toFloat();
     QLineEdit* lineSender = (QLineEdit*) sender();
 
-    Vector3 s = curModel->getScale();//scale
+    Vector3 s =  curModel->transform.scale();//scale
     if(lineSender == mTrLbls[6]){
         s.x = value;
     }
@@ -177,7 +183,7 @@ void Inspector::slotChangeScale(const QString text){
         s.z = value;
     }
 
-    curModel->setScale(s);
+    curModel->transform.setScale(s);
 
     //if text is empty then set '0'
     if(!text.isEmpty()){

@@ -3,7 +3,7 @@
 
 #include "inspector.h"
 
-class Level
+class Level // наследники класса могут быть созданы и загружены в OGL окно. упрощает разработку уровней
 {
 public:    
     static Level* lastLoadedLevel;

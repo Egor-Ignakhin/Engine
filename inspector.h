@@ -5,17 +5,19 @@
 #include "transform.h"
 
 class GLWindow;
+class LevelsCreator;
 
-class Inspector : public Editor
+class Inspector : public Editor // класс является способствующим разработке окном. содержит в себе настройки
 {
     Q_OBJECT
 public:
     Inspector();
     ~Inspector();
     void setCurModel(Model*);
-    void setMainWindow(GLWindow *);
+    void setMainWindow(GLWindow*);
 
 private:
+    LevelsCreator* mLvlsCreator;
     GLWindow* mWindow;
     Model* curModel;
     QWidget* mTransformLabel;

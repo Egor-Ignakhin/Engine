@@ -2,7 +2,7 @@
 #define EDITOR_H
 #include <QtWidgets>
 
-class Editor : public QWidget
+class Editor : public QWidget // главное окно. наследуемые классы используются как вспомогательные окна для разработки
 {
 private:
     QWidget* mWindow;

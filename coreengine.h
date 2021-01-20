@@ -8,7 +8,7 @@
 
 class Component;
 
-class CoreEngine : QObject
+class CoreEngine : QObject// точка старта движка и главный класс
 {
     Q_OBJECT
 public:

@@ -9,15 +9,15 @@ void Level1::load(){
     Cube* floor = new Cube(this, "floor");
 
     base::inspector->setCurModel(column1);
-    floor->setPosition(Vector3(0, -100, 0));
-    floor->setRotation(Vector3(5, 0, 0));
-    floor->setScale(Vector3(200, 1, 100));
+    floor->transform.setPosition(0, -100, 0);
+    floor->transform.setRotation(5, 0, 0);
+    floor->transform.setScale(200, 1, 100);
 
-    column1->setPosition(Vector3(-100, -1, 0));
-    column1->setScale(Vector3(10, 75, 10));
+    column1->transform.setPosition(-100, -1, 0);
+    column1->transform.setScale(10, 75, 100);
 
-    column2->setPosition(Vector3(100, -1, 0));
-    column2->setScale(Vector3(10, 75, 10));
+    column2->transform.setPosition(100, -1, 0);
+    column2->transform.setScale(10, 75, 100);
 }
 
 Level1::~Level1(){

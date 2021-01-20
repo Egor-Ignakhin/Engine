@@ -2,7 +2,7 @@
 #define VECTOR3_H
 
 
-struct Vector3
+struct Vector3 // трёхмерный вектор.
 {    
 public:
     Vector3(float x = 0, float y = 0,float z = 0);
