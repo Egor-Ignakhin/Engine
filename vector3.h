@@ -10,13 +10,6 @@ public:
     float x;
     float y;
     float z;
-    /*
-    Vector3& operator-(Vector3& value){
-
-        static Vector3 retVec(x - value.x, y - value.y, z - value.z);
-
-        return retVec;
-    }*/
 };
 
 #endif // VECTOR3_H

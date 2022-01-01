@@ -2,7 +2,7 @@
 #define TRANSFORM_H
 #include "vector3.h"
 
-class Transform // класс, отвечающий за трансформацию моделей в мире
+class Transform // класс, отвечающий за трансформацию объектов в пространстве
 {
 
 public:

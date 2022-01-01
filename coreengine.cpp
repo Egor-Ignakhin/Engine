@@ -37,11 +37,11 @@ float CoreTime::deltaTime;
 QElapsedTimer* CoreTime::timer;
 void CoreEngine::callUpdates(){
     while(!glw->isHidden()){
-        CoreTime::timer->start();
+        CoreTime::GetTimer()->start();
         for(int i = 0; i< updates.size(); i++){
             updates[i]->update();
         }
-        CoreTime::deltaTime = CoreTime::timer->elapsed() * 0.001;
+        CoreTime::SetDeltaTime(CoreTime::GetTimer()->elapsed() * 0.001);
         //qDebug() <<1/CoreTime::deltaTime << " <- delta time";
         QApplication::processEvents();
     }

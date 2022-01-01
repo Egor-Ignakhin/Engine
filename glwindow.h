@@ -15,8 +15,6 @@ protected:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();    
-    void mouseDoubleClickEvent(QMouseEvent *event);
-    bool eventFilter(QObject* obj, QEvent* event);
     void keyPressEvent(QKeyEvent* event);
     void keyReleaseEvent(QKeyEvent* event);
 public:        

@@ -12,13 +12,13 @@ class CoreEngine : QObject// точка старта движка и главн�
 {
     Q_OBJECT
 public:
-    CoreEngine(int argc, char** argv);
-    QList<Component*> updates;    
+    CoreEngine(int argc, char** argv);   
 
 private slots:
     void callUpdates();
 private:
     GLWindow* glw;
+    QList<Component*> updates;
 };
 
 #endif // COREENGINE_H

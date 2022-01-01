@@ -44,26 +44,6 @@ void GLWindow::paintGL()
     }
 }
 
-void GLWindow::mouseDoubleClickEvent(QMouseEvent *event)
-{
-   // int face = faceAtPosition(event->pos());
-    //if (face != -1) {
-      //  QColor color = QColorDialog::getColor( curmodel->faceColors[face],
-       //                                        this);
-        //if (color.isValid()) {
-          //  curmodel->faceColors[face] = color;
-        //}
-    //}
-}
-bool GLWindow::eventFilter(QObject* obj, QEvent* event){
-
-  /*  else if(event->type() == QEvent::Leave){
-        if(isGameMode){
-            cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);
-        }
-    }*/
-    return false;
-}
 void GLWindow::keyPressEvent(QKeyEvent* event){        
     if(event->key() == Qt::Key_Escape){
         if(isGameMode){
@@ -165,7 +145,7 @@ void GLWindow::changeLevel(Level* l){
 }
 
 void GLWindow::rotateCamera(axis ax , float multiply){
-    multiply *= CoreTime::deltaTime;
+    multiply *= CoreTime::GetDeltaTime();
     if(ax == horizontal){
         camRotation.y += multiply;
         for(int i = 0; i< currentLvl->models.size(); i++){
@@ -192,7 +172,7 @@ void GLWindow::updateWindow(){
 }
 
 void GLWindow::move(motionVector mVector,bool multiply){
-    multiply *= CoreTime::deltaTime;
+    //multiply *= CoreTime::deltaTime;
     for(int i = 0; i< currentLvl->models.size();i++){
         Vector3 mPos = currentLvl->models[i]->transform.position();
         if(mVector == forward || mVector == backward){
@@ -206,15 +186,15 @@ void GLWindow::move(motionVector mVector,bool multiply){
         currentLvl->models[i]->transform.setPosition(mPos);
     }
 }
-void GLWindow::slotChangeGameMode(){       
+void GLWindow::slotChangeGameMode(){
     isGameMode = !isGameMode;
     setMouseTracking(isGameMode);
 
     if(isGameMode){                  
-        ShowCursor(FALSE);
+        //ShowCursor(FALSE);
     }
     else{
-        ShowCursor(TRUE);        
+        //ShowCursor(TRUE);
     }
     cursor().setPos((globWidth + globPosX) / 2, (globHeight + globPosY) / 2);//set in center window
 }

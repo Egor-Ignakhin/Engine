@@ -7,6 +7,10 @@ class CoreTime : public Component // класс является время-вы
 public:
     CoreTime();
     void update();
+    static float GetDeltaTime();
+    static void SetDeltaTime(float dt);
+    static QElapsedTimer* GetTimer();
+private:
     static float deltaTime;
     static QElapsedTimer* timer;
 };
