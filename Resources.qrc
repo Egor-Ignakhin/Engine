@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>Models/House.obj</file>
+        <file>Screen01.ui.qml</file>
     </qresource>
 </RCC>

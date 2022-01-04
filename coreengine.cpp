@@ -2,10 +2,17 @@
 #include "component.h"
 #include <QTimer>
 #include "CoreTime.h"
+#include "enginelauncher.h"
 
 CoreEngine::CoreEngine(int argc, char** argv)
 {
     QApplication app(argc, argv);
+
+    /*EngineLauncher* launcher = new EngineLauncher();
+
+    while(launcher->GetCanLoadEditor() == false){
+        QApplication::processEvents();
+    }*/
 
     CoreTime* time = new CoreTime;
 

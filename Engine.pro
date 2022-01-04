@@ -1,4 +1,4 @@
-QT       += core gui opengl
+QT       += core gui opengl quickwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,6 +15,7 @@ SOURCES += \
     coreengine.cpp \
     cube.cpp \
     editor.cpp \
+    enginelauncher.cpp \
     glwindow.cpp \
     inspector.cpp \
     level.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     coreengine.h \
     cube.h \
     editor.h \
+    enginelauncher.h \
     glwindow.h \
     inspector.h \
     level.h \
@@ -48,4 +50,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    Models.qrc
+    Resources.qrc
+
+DISTFILES +=
