@@ -11,6 +11,10 @@ LIBS += -lopengl32 -lglu32
 
 SOURCES += \
     CoreTime.cpp \
+    Test-game-2d/Scripts/artillerytower.cpp \
+    Test-game-2d/Scripts/firetower.cpp \
+    Test-game-2d/Scripts/shootingtower.cpp \
+    Test-game-2d/Scripts/tower.cpp \
     component.cpp \
     coreengine.cpp \
     cube.cpp \
@@ -28,6 +32,10 @@ SOURCES += \
 
 HEADERS += \
     CoreTime.h \
+    Test-game-2d/Scripts/artillerytower.h \
+    Test-game-2d/Scripts/firetower.h \
+    Test-game-2d/Scripts/shootingtower.h \
+    Test-game-2d/Scripts/tower.h \
     component.h \
     coreengine.h \
     cube.h \
