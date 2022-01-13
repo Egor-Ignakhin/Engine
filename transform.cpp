@@ -1,5 +1,13 @@
 #include "transform.h"
+#include <QDebug>
 
+
+Transform::Transform(){
+qDebug() << "Создание " << typeid(*this).name();
+}
+Transform::~Transform(){
+    qDebug() << "Удаление " << typeid(*this).name();
+}
 Vector3 Transform::position(){
     return mPosition;
 }

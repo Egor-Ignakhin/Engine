@@ -12,7 +12,7 @@ Level* Level::lastLoadedLevel;
 GLWindow* Level::mainWindow;
 Inspector* Level::inspector;
 void Level::loadLevel(unsigned char index){
-    qDebug() << "load level " << index;    
+    qDebug() << "Уровень " << index << "был загружен";
     delete lastLoadedLevel;
 
 

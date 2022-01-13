@@ -4,7 +4,7 @@
 
 EngineLauncher::EngineLauncher()
 {
-QQuickWidget* view = new QQuickWidget();
+QQuickWidget* view = new QQuickWidget;
 view->setSource(QUrl("qrc:/Screen01.ui.qml"));
 view->show();
 

@@ -19,6 +19,7 @@ protected:
     void keyReleaseEvent(QKeyEvent* event);
 public:        
     GLWindow(QWidget* parent = 0);
+    ~GLWindow();
     Vector3 camRotation;
     void update();   
     void changeLevel(Level* l);
@@ -43,6 +44,11 @@ private:
     enum motionVector{forward, backward, right, left};
     void move(motionVector mVector,bool multiply);
     Level* currentLvl;
+    void drawAxis();
+    void drawFigure();
+    void getVertexArray();
+    void getColorArray();
+    void getIndexArray();
 public slots:    
     void slotChangeGameMode();
 signals:

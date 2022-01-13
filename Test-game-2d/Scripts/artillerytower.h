@@ -6,11 +6,11 @@
 class ArtilleryTower : public Tower
 {
 private :
-    class ArtilleryLevel: public Tower::Level{
+    class ArtilleryLevel: public Tower::TowerLevel{
     public:
         float reloadTime;
         ArtilleryLevel(int cost, int damage,
-                       int lessionArea, int attackRadius, float reloadTime):Tower::Level(cost, damage, lessionArea, attackRadius){
+                       int lessionArea, int attackRadius, float reloadTime):Tower::TowerLevel(cost, damage, lessionArea, attackRadius){
             this->reloadTime = reloadTime;
         }
     };

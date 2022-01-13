@@ -8,6 +8,8 @@ CoreEngine::CoreEngine(int argc, char** argv)
 {
     QApplication app(argc, argv);
 
+    qDebug() << "Создание " << typeid(*this).name();
+
     /*EngineLauncher* launcher = new EngineLauncher();
 
     while(launcher->GetCanLoadEditor() == false){
@@ -19,7 +21,7 @@ CoreEngine::CoreEngine(int argc, char** argv)
     Editor* editor = new Editor;
     editor->init();
 
-    Inspector* inspector = new Inspector();
+    inspector = new Inspector;
 
     glw = new GLWindow(editor);
     app.installEventFilter(glw);
@@ -38,6 +40,13 @@ CoreEngine::CoreEngine(int argc, char** argv)
     timer->singleShot(1,this,SLOT(callUpdates()));
 
     app.exec();
+}
+
+CoreEngine::~CoreEngine(){
+    qDebug() << "Удаление " << typeid(*this).name();
+    delete glw;
+    delete inspector;
+    //delete updates;?
 }
 
 float CoreTime::deltaTime;

@@ -1,13 +1,16 @@
 #include "artillerytower.h"
 
 ArtilleryTower::ArtilleryTower()
-{
-    levels = new ArtilleryLevel[3]{{19, 20,1,1,1},
-    {19, 20,1,1,1}, {19, 20,1,1,1}};
+{    
+    towerLevels = new ArtilleryLevel[3]{
+    {240, 15, 5, 2, 100},
+    {300, 22, 7, 3, 150},
+    {400, 30, 8, 6, 200}
+    };
 
 }
 ArtilleryTower::~ArtilleryTower(){
-    delete [] levels;
+    delete [] towerLevels;
 }
 void ArtilleryTower::InitParameters(){
 

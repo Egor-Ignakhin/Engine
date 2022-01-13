@@ -7,7 +7,8 @@ class Component // наследники этого класса являются
 
 public:
     Component();
-    virtual void update() = 0; // вызывается каждый кадр
+    virtual ~Component();
+    virtual void update() = 0; // вызывается каждый кадр    
 };
 
 #endif // COMPONENT_H

@@ -11,6 +11,11 @@ LIBS += -lopengl32 -lglu32
 
 SOURCES += \
     CoreTime.cpp \
+    Test-game-2d/Scripts/Levels/brokenfieldlevel.cpp \
+    Test-game-2d/Scripts/Levels/depressedcitylevel.cpp \
+    Test-game-2d/Scripts/Levels/destroyedtownlevel.cpp \
+    Test-game-2d/Scripts/Levels/foggyforestlevel.cpp \
+    Test-game-2d/Scripts/Levels/trenchlevel.cpp \
     Test-game-2d/Scripts/artillerytower.cpp \
     Test-game-2d/Scripts/firetower.cpp \
     Test-game-2d/Scripts/shootingtower.cpp \
@@ -27,11 +32,17 @@ SOURCES += \
     levelscreator.cpp \
     main.cpp \
     model.cpp \
+    testmodel.cpp \
     transform.cpp \
     vector3.cpp
 
 HEADERS += \
     CoreTime.h \
+    Test-game-2d/Scripts/Levels/brokenfieldlevel.h \
+    Test-game-2d/Scripts/Levels/depressedcitylevel.h \
+    Test-game-2d/Scripts/Levels/destroyedtownlevel.h \
+    Test-game-2d/Scripts/Levels/foggyforestlevel.h \
+    Test-game-2d/Scripts/Levels/trenchlevel.h \
     Test-game-2d/Scripts/artillerytower.h \
     Test-game-2d/Scripts/firetower.h \
     Test-game-2d/Scripts/shootingtower.h \
@@ -47,6 +58,7 @@ HEADERS += \
     level1.h \
     levelscreator.h \
     model.h \
+    testmodel.h \
     transform.h \
     vector3.h
 

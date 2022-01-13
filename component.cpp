@@ -4,3 +4,6 @@ Component::Component()
 {
 
 }
+Component::~Component(){
+
+}

@@ -102,10 +102,12 @@ Inspector::Inspector(){
 
     mLvlsCreator = new LevelsCreator;
     connect(openCreator, SIGNAL(clicked()), mLvlsCreator, SLOT(open()));
+
+    qDebug() << "Создание " << typeid(*this).name();
 }
 
 Inspector::~Inspector(){
-
+qDebug() << "Удаление " << typeid(*this).name();
 }
 
 void Inspector::slotChangePosition(const QString text){

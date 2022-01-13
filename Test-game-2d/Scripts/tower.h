@@ -5,7 +5,7 @@
 class Tower
 {
 public:
-    class Level
+    class TowerLevel
     {
     private:
         int cost;
@@ -18,7 +18,7 @@ public:
         int GetDamage(){return damage;}
         int GetLessionArea(){return lessionArea;}
         int GetAttackRadius(){return attackRadius;}
-        Level(int cost, int damage,
+        TowerLevel(int cost, int damage,
               int lessionArea, int attackRadius){
             this->cost = cost;
             this->damage = damage;
@@ -28,13 +28,13 @@ public:
 };
 protected:
     int currentLevel;
-    Level *levels;
+    TowerLevel *towerLevels;
 
     virtual void InitParameters() = 0;
 
 public:
     Tower();
-    ~Tower();
+    virtual ~Tower();
 };
 
 #endif // TOWER_H
