@@ -2,19 +2,13 @@
 #include "component.h"
 #include <QTimer>
 #include "CoreTime.h"
-#include "enginelauncher.h"
+#include "mainmenuwindow.h"
 
 CoreEngine::CoreEngine(int argc, char** argv)
 {
     QApplication app(argc, argv);
 
-    qDebug() << "Создание " << typeid(*this).name();
-
-    /*EngineLauncher* launcher = new EngineLauncher();
-
-    while(launcher->GetCanLoadEditor() == false){
-        QApplication::processEvents();
-    }*/
+    qDebug() << "Создание " << typeid(*this).name();  
 
     CoreTime* time = new CoreTime;
 
@@ -38,6 +32,8 @@ CoreEngine::CoreEngine(int argc, char** argv)
 
     QTimer* timer = new QTimer(this);
     timer->singleShot(1,this,SLOT(callUpdates()));
+
+    MainMenuWindow* w = new MainMenuWindow();
 
     app.exec();
 }

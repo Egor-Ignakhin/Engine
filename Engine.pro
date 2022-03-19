@@ -24,14 +24,16 @@ SOURCES += \
     coreengine.cpp \
     cube.cpp \
     editor.cpp \
-    enginelauncher.cpp \
     glwindow.cpp \
     inspector.cpp \
     level.cpp \
     level1.cpp \
     levelscreator.cpp \
+    levelsmenu.cpp \
     main.cpp \
+    mainmenuwindow.cpp \
     model.cpp \
+    settingsmenu.cpp \
     testmodel.cpp \
     transform.cpp \
     vector3.cpp
@@ -51,18 +53,23 @@ HEADERS += \
     coreengine.h \
     cube.h \
     editor.h \
-    enginelauncher.h \
     glwindow.h \
     inspector.h \
     level.h \
     level1.h \
     levelscreator.h \
+    levelsmenu.h \
+    mainmenuwindow.h \
     model.h \
+    settingsmenu.h \
     testmodel.h \
     transform.h \
     vector3.h
 
-FORMS +=
+FORMS += \
+    LevelsMenu.ui \
+    MainMenu.ui \
+    SettingsMenu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
